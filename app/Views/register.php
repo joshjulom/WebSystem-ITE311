@@ -1,0 +1,70 @@
+<?= $this->extend('template') ?>
+
+<?= $this->section('content') ?>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7 col-lg-6">
+        <h1 class="text-center mb-4 text-light">Create Account</h1>
+
+        <?php if (session()->getFlashdata('register_error')): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= esc(session()->getFlashdata('register_error')) ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="card shadow-sm border-0" style="background-color: #202225;">
+            <div class="card-body p-4">
+                <form action="<?= base_url('register') ?>" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label text-light">Name</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="name" 
+                               name="name" 
+                               required 
+                               value="<?= esc(old('name')) ?>"
+                               style="background-color: #2f3136; color: #fff; border: 1px solid #444;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-light">Email</label>
+                        <input type="email" 
+                               class="form-control" 
+                               id="email" 
+                               name="email" 
+                               required 
+                               value="<?= esc(old('email')) ?>"
+                               style="background-color: #2f3136; color: #fff; border: 1px solid #444;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label text-light">Password</label>
+                        <input type="password" 
+                               class="form-control" 
+                               id="password" 
+                               name="password" 
+                               required
+                               style="background-color: #2f3136; color: #fff; border: 1px solid #444;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_confirm" class="form-label text-light">Confirm Password</label>
+                        <input type="password" 
+                               class="form-control" 
+                               id="password_confirm" 
+                               name="password_confirm" 
+                               required
+                               style="background-color: #2f3136; color: #fff; border: 1px solid #444;">
+                    </div>
+                    <button type="submit" class="btn w-100" style="background-color: #5865F2; color: #fff;">
+                        Create Account
+                    </button>
+                </form>
+
+                <!-- Already have an account? -->
+                <div class="text-center mt-3">
+                    <p class="text-light mb-0">Already have an account? 
+                        <a href="<?= base_url('login') ?>" style="color: #5865F2;">Log in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>
