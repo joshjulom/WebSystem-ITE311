@@ -38,4 +38,4 @@ class UserSeeder extends Seeder
         // Insert multiple rows
         $this->db->table('users')->insertBatch($data);
     }
-}
+    }
