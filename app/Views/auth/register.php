@@ -1,40 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="container mt-5">
-    <h2>Register</h2>
+<?= $this->extend('template') ?>
 
-    <?php if (isset($validation)) : ?>
-        <div class="alert alert-danger"><?= $validation->listErrors() ?></div>
-    <?php endif; ?>
+<?= $this->section('content') ?>
+<div class="row justify-content-center mt-2">
+    <div class="col-md-7 col-lg-6">
+        <h1 class="text-center mb-4">Create Account</h1>
 
-    <?php if (session()->getFlashdata('success')) : ?>
-        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
-    <?php endif; ?>
+        <?php if (session()->getFlashdata('register_error')): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= esc(session()->getFlashdata('register_error')) ?>
+            </div>
+        <?php endif; ?>
 
-    <form method="post" action="<?= base_url('register') ?>">
-        <?= csrf_field() ?>
-        <div class="mb-3">
-            <label>Name</label>
-            <input type="text" class="form-control" name="name" value="<?= set_value('name') ?>" required>
+        <div class="card shadow-sm border-0 bg-dark text-light">
+            <div class="card-body p-4">
+                <form action="<?= base_url('register') ?>" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label text-light">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               required value="<?= esc(old('name')) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-light">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" 
+                               required value="<?= esc(old('email')) ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label text-light">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_confirm" class="form-label text-light">Confirm Password</label>
+                        <input type="password" class="form-control" id="password_confirm" 
+                               name="password_confirm" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create Account</button>
+                </form>
+
+                <!-- Already have an account? -->
+                <div class="text-center mt-3">
+                    <p class="mb-0 text-muted small">
+                        Already have an account? <a href="<?= base_url('login') ?>">Log in here</a>
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" class="form-control" name="email" value="<?= set_value('email') ?>" required>
-        </div>
-        <div class="mb-3">
-            <label>Password</label>
-            <input type="password" class="form-control" name="password" required>
-        </div>
-        <div class="mb-3">
-            <label>Confirm Password</label>
-            <input type="password" class="form-control" name="password_confirm" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Register</button>
-        <a href="<?= base_url('login') ?>" class="btn btn-link">Login</a>
-    </form>
-</body>
-</html>
+    </div>
+</div>
+<?= $this->endSection() ?>

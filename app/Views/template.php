@@ -104,31 +104,6 @@
     </style>
 </head>
 <body>
-<<<<<<< HEAD
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid"> <!-- Full width -->
-      <a class="navbar-brand" href="<?= base_url('/') ?>">MyCI</a>
-
-      <!-- Toggler for mobile -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="<?= base_url('/') ?>">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="<?= base_url('/about') ?>">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="<?= base_url('/contact') ?>">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-</nav>
-
-
-    <div class="container">
-    <?= $this->renderSection('content') ?>
-  </div>
-=======
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg">
@@ -158,7 +133,6 @@
 <div class="container">
     <?= $this->renderSection('content') ?>
 </div>
->>>>>>> 4ce6d5449c1f03dd0a546ba78ef04f097ef7b778
 
 </body>
 </html>
