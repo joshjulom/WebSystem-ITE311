@@ -1,9 +1,8 @@
 <?= $this->extend('template') ?>
 
 <?= $this->section('content') ?>
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="mb-4">
         <h1 class="mb-0">Dashboard</h1>
-        <a href="<?= base_url('logout') ?>" class="btn btn-outline-danger">Logout</a>
     </div>
 
     <?php if (session()->getFlashdata('success')): ?>
