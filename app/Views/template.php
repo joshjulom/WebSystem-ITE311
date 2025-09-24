@@ -116,7 +116,11 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <?php if(session()->get('isLoggedIn')): ?>
-                    <!-- Show Logout only when logged in -->
+                    <?php if(session()->get('role') === 'admin'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?= uri_string() == 'dashboard' ? 'active' : '' ?>" href="<?= site_url('dashboard') ?>">Admin Dashboard</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <a class="btn btn-primary ms-2" href="<?= site_url('logout') ?>">Logout</a>
                     </li>
