@@ -45,3 +45,4 @@ class AddRoleToUsers extends Migration
 		}
 	}
 }
+

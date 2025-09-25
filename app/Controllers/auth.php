@@ -157,10 +157,11 @@ class Auth extends Controller
 		
 		$role = $session->get('role');
 		$adminData = null;
+		$teacherData = null;
+		$studentData = null;
 		
-		// Load role-specific data (admin only for now)
+		// Load role-specific data (admin)
 		if ($role === 'admin') {
-			// Example placeholder data for admin view; replace with real queries later
 			$adminData = [
 				'totalUsers' => model(UserModel::class)->countAllResults(),
 				'latestUsers' => model(UserModel::class)
@@ -169,14 +170,67 @@ class Auth extends Controller
 					->find(),
 			];
 		}
+
+		// Load role-specific data (teacher)
+		if ($role === 'teacher') {
+			$db = \Config\Database::connect();
+			$userId = (int) $session->get('user_id');
+			$totalCourses = (int) $db->table('courses')->where('instructor_id', $userId)->countAllResults();
+			$totalStudents = (int) $db->query(
+				"SELECT COUNT(DISTINCT e.student_id) AS cnt
+				 FROM enrollments e
+				 JOIN courses c ON c.id = e.course_id
+				 WHERE c.instructor_id = ?",
+				[$userId]
+			)->getRow('cnt');
+			$recentEnrollments = $db->query(
+				"SELECT u.name, u.email, c.title
+				 FROM enrollments e
+				 JOIN users u ON u.id = e.student_id
+				 JOIN courses c ON c.id = e.course_id
+				 WHERE c.instructor_id = ?
+				 ORDER BY e.id DESC
+				 LIMIT 5",
+				[$userId]
+			)->getResultArray();
+			$teacherData = [
+				'totalCourses' => $totalCourses,
+				'totalStudents' => $totalStudents,
+				'recentEnrollments' => $recentEnrollments,
+			];
+		}
+
+		// Load role-specific data (student)
+		if ($role === 'student') {
+			$db = \Config\Database::connect();
+			$userId = (int) $session->get('user_id');
+			$totalEnrolled = (int) $db->table('enrollments')->where('student_id', $userId)->countAllResults();
+			$totalCompleted = (int) $db->table('enrollments')->where(['student_id' => $userId, 'status' => 'completed'])->countAllResults();
+			$myCourses = $db->query(
+				"SELECT c.title, c.id
+				 FROM enrollments e
+				 JOIN courses c ON c.id = e.course_id
+				 WHERE e.student_id = ?
+				 ORDER BY e.id DESC
+				 LIMIT 5",
+				[$userId]
+			)->getResultArray();
+			$studentData = [
+				'totalEnrolled' => $totalEnrolled,
+				'totalCompleted' => $totalCompleted,
+				'myCourses' => $myCourses,
+			];
+		}
 		
 		$data = [
 			'user_name' => $session->get('user_name'),
 			'user_email' => $session->get('user_email'),
 			'role' => $role,
 			'admin' => $adminData,
+			'teacher' => $teacherData,
+			'student' => $studentData,
 		];
 		
-		return view('dashboard', $data);
+		return view('auth/dashboard', $data);
 	}
 }

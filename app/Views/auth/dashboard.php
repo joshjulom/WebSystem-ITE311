@@ -51,6 +51,41 @@
 				</div>
 			</div>
 		</div>
+	<?php elseif (isset($role) && $role === 'teacher'): ?>
+		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
+			<div class="card-body">
+				<h5 class="card-title text-white">Teacher Overview</h5>
+				<p class="mb-2">Your courses and students at a glance.</p>
+				<div class="row g-3">
+					<div class="col-md-4">
+						<div class="p-3 bg-secondary rounded">
+							<div class="text-muted">Total Courses</div>
+							<div class="h4 mb-0"><?= isset($teacher['totalCourses']) ? esc($teacher['totalCourses']) : '0' ?></div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="p-3 bg-secondary rounded">
+							<div class="text-muted">Total Students</div>
+							<div class="h4 mb-0"><?= isset($teacher['totalStudents']) ? esc($teacher['totalStudents']) : '0' ?></div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="p-3 bg-secondary rounded">
+							<div class="text-muted mb-2">Recent Enrollments</div>
+							<ul class="mb-0">
+								<?php if (!empty($teacher['recentEnrollments'])): ?>
+									<?php foreach ($teacher['recentEnrollments'] as $e): ?>
+										<li><?= esc($e['name'] ?? 'Unnamed') ?> (<?= esc($e['email'] ?? '-') ?>) - <?= esc($e['title'] ?? 'Untitled Course') ?></li>
+									<?php endforeach; ?>
+								<?php else: ?>
+									<li class="text-muted">No recent enrollments.</li>
+								<?php endif; ?>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	<?php else: ?>
 		<div class="card shadow-sm border-0 bg-dark text-light">
 			<div class="card-body">
