@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\LoginLogModel;
 use CodeIgniter\Controller;
 
 class Auth extends Controller
@@ -32,11 +33,21 @@ class Auth extends Controller
 					$name = trim($this->request->getPost('name'));
 					$email = $this->request->getPost('email');
 					
+					// Determine role from POST with whitelist and normalization
+					$requestedRole = strtolower(trim((string) $this->request->getPost('role')));
+					$roleMap = [
+						'instructor' => 'teacher',
+						'teacher' => 'teacher',
+						'admin' => 'admin',
+						'student' => 'student',
+					];
+					$role = $roleMap[$requestedRole] ?? 'student';
+
 					$data = [
 						'name' => $name,
 						'email' => $email,
 						'password' => $this->request->getPost('password'), // Let model handle hashing
-						'role' => 'student'
+						'role' => $role
 					];
 					
 					log_message('info', 'Attempting to insert user data: ' . print_r($data, true));
@@ -108,7 +119,7 @@ class Auth extends Controller
 						// Use the name field directly from database
 						$userName = $user['name'] ?? $user['email'];
 						
-						// Set session data
+					// Set session data
 						$sessionData = [
 							'user_id' => $user['id'],
 							'user_name' => $userName,
@@ -116,7 +127,20 @@ class Auth extends Controller
 							'role' => $user['role'] ?? 'student',
 							'isLoggedIn' => true
 						];
-						
+
+						// Log successful login
+						try {
+							$loginLogModel = new LoginLogModel();
+							$loginLogModel->logLogin(
+								(int) $user['id'],
+								(string) $userName,
+								(string) ($user['email'] ?? ''),
+								(string) ($user['role'] ?? 'student')
+							);
+						} catch (\Throwable $e) {
+							log_message('error', 'Failed to log login event: ' . $e->getMessage());
+						}
+
 						$session->set($sessionData);
 						$session->setFlashdata('success', 'Welcome, ' . $userName . '!');
 						
@@ -156,18 +180,26 @@ class Auth extends Controller
 		}
 		
 		$role = $session->get('role');
+		// Normalize role aliases
+		if ($role === 'instructor') {
+			$role = 'teacher';
+		}
 		$adminData = null;
 		$teacherData = null;
 		$studentData = null;
 		
 		// Load role-specific data (admin)
 		if ($role === 'admin') {
+			$loginLogModel = new LoginLogModel();
 			$adminData = [
 				'totalUsers' => model(UserModel::class)->countAllResults(),
 				'latestUsers' => model(UserModel::class)
 					->orderBy('created_at', 'DESC')
 					->limit(5)
 					->find(),
+				'recentLogins' => $loginLogModel->getRecentLogins(10),
+				'loginStatsByRole' => $loginLogModel->getLoginStatsByRole(7),
+				'recentUniqueUsers' => $loginLogModel->getRecentUniqueUsers(7, 10),
 			];
 		}
 

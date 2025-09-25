@@ -32,6 +32,20 @@
                                    placeholder="John Doe"
                                    value="<?= esc(old('name')) ?>">
                         </div>
+
+					<div class="mb-4">
+						<label for="role" class="form-label">Role</label>
+						<div class="input-group">
+							<span class="input-group-text bg-dark text-light border-0">
+								<i class="bi bi-people-fill"></i>
+							</span>
+							<select class="form-control border-0 shadow-sm" id="role" name="role" required>
+								<option value="student" <?= old('role') === 'student' ? 'selected' : '' ?>>Student</option>
+								<option value="teacher" <?= old('role') === 'teacher' ? 'selected' : '' ?>>Instructor</option>
+								<option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Admin</option>
+							</select>
+						</div>
+					</div>
                     </div>
 
                     <div class="mb-4">
