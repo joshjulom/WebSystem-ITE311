@@ -209,7 +209,7 @@ class Auth extends Controller
 			$userId = (int) $session->get('user_id');
 			$totalCourses = (int) $db->table('courses')->where('instructor_id', $userId)->countAllResults();
 			$totalStudents = (int) $db->query(
-				"SELECT COUNT(DISTINCT e.student_id) AS cnt
+				"SELECT COUNT(DISTINCT e.user_id) AS cnt
 				 FROM enrollments e
 				 JOIN courses c ON c.id = e.course_id
 				 WHERE c.instructor_id = ?",
@@ -218,10 +218,10 @@ class Auth extends Controller
 			$recentEnrollments = $db->query(
 				"SELECT u.name, u.email, c.title
 				 FROM enrollments e
-				 JOIN users u ON u.id = e.student_id
+				 JOIN users u ON u.id = e.user_id
 				 JOIN courses c ON c.id = e.course_id
 				 WHERE c.instructor_id = ?
-				 ORDER BY e.id DESC
+				 ORDER BY e.enrollment_date DESC
 				 LIMIT 5",
 				[$userId]
 			)->getResultArray();
@@ -236,14 +236,14 @@ class Auth extends Controller
 		if ($role === 'student') {
 			$db = \Config\Database::connect();
 			$userId = (int) $session->get('user_id');
-			$totalEnrolled = (int) $db->table('enrollments')->where('student_id', $userId)->countAllResults();
-			$totalCompleted = (int) $db->table('enrollments')->where(['student_id' => $userId, 'status' => 'completed'])->countAllResults();
+			$totalEnrolled = (int) $db->table('enrollments')->where('user_id', $userId)->countAllResults();
+			$totalCompleted = 0; // Since we don't have status field anymore
 			$myCourses = $db->query(
-				"SELECT c.title, c.id
+				"SELECT c.title, c.id, e.enrollment_date
 				 FROM enrollments e
 				 JOIN courses c ON c.id = e.course_id
-				 WHERE e.student_id = ?
-				 ORDER BY e.id DESC
+				 WHERE e.user_id = ?
+				 ORDER BY e.enrollment_date DESC
 				 LIMIT 5",
 				[$userId]
 			)->getResultArray();

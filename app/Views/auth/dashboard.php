@@ -203,6 +203,7 @@
 			</div>
 		</div>
 	<?php elseif (isset($role) && $role === 'student'): ?>
+		<!-- Student Overview -->
 		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
 			<div class="card-body">
 				<h5 class="card-title text-white">Student Overview</h5>
@@ -211,29 +212,116 @@
 					<div class="col-md-4">
 						<div class="p-3 bg-secondary rounded">
 							<div class="text-muted">Total Enrolled</div>
-							<div class="h4 mb-0"><?= isset($student['totalEnrolled']) ? esc($student['totalEnrolled']) : '0' ?></div>
+							<div class="h4 mb-0" id="totalEnrolledCount">
+								<?php
+								$enrollmentModel = new \App\Models\EnrollmentModel();
+								$user_id = session('user_id');
+								$enrolledCourses = $enrollmentModel->getUserEnrollments($user_id);
+								echo count($enrolledCourses);
+								?>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="p-3 bg-secondary rounded">
-							<div class="text-muted">Completed</div>
-							<div class="h4 mb-0"><?= isset($student['totalCompleted']) ? esc($student['totalCompleted']) : '0' ?></div>
+							<div class="text-muted">Available Courses</div>
+							<div class="h4 mb-0" id="availableCoursesCount">
+								<?php
+								$availableCourses = $enrollmentModel->getAvailableCourses($user_id);
+								echo count($availableCourses);
+								?>
+							</div>
 						</div>
 					</div>
-					<div class="col-md-12">
-						<div class="p-3 bg-secondary rounded">
-							<div class="text-muted mb-2">Recent Courses</div>
-							<ul class="mb-0">
-								<?php if (!empty($student['myCourses'])): ?>
-									<?php foreach ($student['myCourses'] as $c): ?>
-										<li><?= esc($c['title'] ?? 'Untitled Course') ?></li>
-									<?php endforeach; ?>
-								<?php else: ?>
-									<li class="text-muted">No recent courses.</li>
-								<?php endif; ?>
-							</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Enrolled Courses Section -->
+		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
+			<div class="card-body">
+				<h5 class="card-title text-white">My Enrolled Courses</h5>
+				<p class="mb-3">Courses you are currently enrolled in.</p>
+				<div class="row" id="enrolledCoursesList">
+					<?php
+					$enrolledCourses = $enrollmentModel->getUserEnrollments($user_id);
+					if (!empty($enrolledCourses)):
+						foreach ($enrolledCourses as $course):
+					?>
+						<div class="col-md-6 mb-3">
+							<div class="card bg-secondary text-light border-0 h-100">
+								<div class="card-body">
+									<h6 class="card-title text-white mb-2">
+										<?= esc($course['title'] ?? 'Untitled Course') ?>
+									</h6>
+									<p class="card-text text-muted mb-3">
+										<?= esc(substr($course['description'] ?? 'No description available', 0, 100)) ?>
+										<?= (strlen($course['description'] ?? '') > 100) ? '...' : '' ?>
+									</p>
+									<small class="text-muted">
+										Enrolled: <?= isset($course['enrollment_date']) ? date('M j, Y', strtotime($course['enrollment_date'])) : 'N/A' ?>
+									</small>
+								</div>
+							</div>
 						</div>
-					</div>
+					<?php
+						endforeach;
+					else:
+					?>
+						<div class="col-12">
+							<div class="text-center text-muted py-4">
+								<p>You are not enrolled in any courses yet.</p>
+								<p>Browse available courses below and click "Enroll" to get started!</p>
+							</div>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+
+		<!-- Available Courses Section -->
+		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
+			<div class="card-body">
+				<h5 class="card-title text-white">Available Courses</h5>
+				<p class="mb-3">Courses available for enrollment.</p>
+				<div class="row" id="availableCoursesList">
+					<?php
+					$availableCourses = $enrollmentModel->getAvailableCourses($user_id);
+					if (!empty($availableCourses)):
+						foreach ($availableCourses as $course):
+					?>
+						<div class="col-md-6 mb-3">
+							<div class="card bg-secondary text-light border-0 h-100">
+								<div class="card-body">
+									<h6 class="card-title text-white mb-2">
+										<?= esc($course['title'] ?? 'Untitled Course') ?>
+									</h6>
+									<p class="card-text text-muted mb-3">
+										<?= esc(substr($course['description'] ?? 'No description available', 0, 100)) ?>
+										<?= (strlen($course['description'] ?? '') > 100) ? '...' : '' ?>
+									</p>
+									<div class="d-flex justify-content-between align-items-center">
+										<small class="text-muted">
+											Instructor ID: <?= esc($course['instructor_id'] ?? 'N/A') ?>
+										</small>
+										<button class="btn btn-primary btn-sm enroll-btn"
+												data-course-id="<?= esc($course['id']) ?>">
+											Enroll
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?php
+						endforeach;
+					else:
+					?>
+						<div class="col-12">
+							<div class="text-center text-muted py-4">
+								<p>No courses available for enrollment at the moment.</p>
+							</div>
+						</div>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -246,5 +334,112 @@
 				<p class="text-muted mb-0">You are successfully logged in as <strong><?= esc(session('role')) ?></strong>.</p>
 			</div>
 		</div>
+	<?php endif; ?>
+
+	<!-- AJAX Enrollment Script -->
+	<?php if (isset($role) && $role === 'student'): ?>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		$('.enroll-btn').on('click', function(e) {
+			e.preventDefault();
+
+			var button = $(this);
+			var courseId = button.data('course-id');
+			var originalText = button.text();
+
+			// Disable button and show loading state
+			button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enrolling...');
+
+			// Send AJAX request
+			$.post('<?= base_url('/course/enroll') ?>', {
+				course_id: courseId
+			})
+			.done(function(response) {
+				if (response.success) {
+					// Capture course information before removing from DOM
+					var courseCard = button.closest('.card');
+					var courseTitle = courseCard.find('.card-title').text();
+					var courseDescription = courseCard.find('.card-text').text();
+
+					// Show success message
+					showAlert(response.message, 'success');
+
+					// Remove the course card from available courses
+					button.closest('.col-md-6').fadeOut(300, function() {
+						$(this).remove();
+
+						// Update available courses count
+						updateAvailableCoursesCount();
+
+						// Add course to enrolled courses section with captured data
+						addCourseToEnrolled(courseId, courseTitle, courseDescription);
+
+						// Update enrolled courses count
+						updateEnrolledCoursesCount();
+					});
+				} else {
+					// Show error message
+					showAlert(response.message, 'danger');
+
+					// Re-enable button
+					button.prop('disabled', false).text(originalText);
+				}
+			})
+			.fail(function() {
+				showAlert('An error occurred while processing your enrollment. Please try again.', 'danger');
+
+				// Re-enable button
+				button.prop('disabled', false).text(originalText);
+			});
+		});
+
+		function showAlert(message, type) {
+			var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+				message +
+				'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+				'</div>';
+
+			$('.alert').remove(); // Remove existing alerts
+			$(alertHtml).insertAfter('.mb-4 h1');
+		}
+
+		function updateAvailableCoursesCount() {
+			var currentCount = parseInt($('#availableCoursesCount').text());
+			$('#availableCoursesCount').text(currentCount - 1);
+		}
+
+		function updateEnrolledCoursesCount() {
+			var currentCount = parseInt($('#totalEnrolledCount').text());
+			$('#totalEnrolledCount').text(currentCount + 1);
+		}
+
+		function addCourseToEnrolled(courseId, courseTitle, courseDescription) {
+			// Create enrolled course card with provided course data
+			var enrolledCardHtml = `
+				<div class="col-md-6 mb-3">
+					<div class="card bg-secondary text-light border-0 h-100">
+						<div class="card-body">
+							<h6 class="card-title text-white mb-2">${courseTitle}</h6>
+							<p class="card-text text-muted mb-3">${courseDescription}</p>
+							<small class="text-muted">
+								Enrolled: ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+							</small>
+						</div>
+					</div>
+				</div>
+			`;
+
+			// Remove empty state message if it exists
+			$('#enrolledCoursesList .text-center').remove();
+
+			// Add to enrolled courses section
+			$('#enrolledCoursesList').append(enrolledCardHtml);
+
+			// Animate the new card
+			$('#enrolledCoursesList .col-md-6:last-child .card').hide().fadeIn(500);
+		}
+	});
+	</script>
 	<?php endif; ?>
 <?= $this->endSection() ?>
