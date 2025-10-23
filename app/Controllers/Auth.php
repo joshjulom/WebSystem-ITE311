@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\LoginLogModel;
+use App\Models\CourseModel;
 use CodeIgniter\Controller;
 
 class Auth extends Controller
@@ -206,8 +207,9 @@ class Auth extends Controller
 		// Load role-specific data (teacher)
 		if ($role === 'teacher') {
 			$db = \Config\Database::connect();
+			$courseModel = new CourseModel();
 			$userId = (int) $session->get('user_id');
-			$totalCourses = (int) $db->table('courses')->where('instructor_id', $userId)->countAllResults();
+			$totalCourses = $courseModel->where('instructor_id', $userId)->countAllResults();
 			$totalStudents = (int) $db->query(
 				"SELECT COUNT(DISTINCT e.user_id) AS cnt
 				 FROM enrollments e
@@ -225,10 +227,12 @@ class Auth extends Controller
 				 LIMIT 5",
 				[$userId]
 			)->getResultArray();
-			$teacherData = [
+    $courses = $courseModel->where('instructor_id', $userId)->findAll();
+    $teacherData = [
 				'totalCourses' => $totalCourses,
 				'totalStudents' => $totalStudents,
 				'recentEnrollments' => $recentEnrollments,
+				'courses' => $courses,
 			];
 		}
 
