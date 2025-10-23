@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
                 'name'       => 'Instructor User',
                 'email'      => 'instructor@example.com',
                 'password'   => password_hash('instructor123', PASSWORD_DEFAULT),
-                'role'       => 'instructor',
+                'role'       => 'teacher',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],

@@ -202,6 +202,44 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Courses Table -->
+		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
+			<div class="card-body">
+				<h5 class="card-title text-white">My Courses</h5>
+				<p class="mb-2">List of all courses you are teaching.</p>
+				<div class="table-responsive">
+					<table class="table table-dark table-sm">
+						<thead>
+							<tr>
+								<th>Title</th>
+								<th>Description</th>
+								<th>Created Date</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if (!empty($teacher['courses'])): ?>
+								<?php foreach ($teacher['courses'] as $course): ?>
+									<tr>
+										<td><?= esc($course['title'] ?? 'Untitled') ?></td>
+										<td><?= esc(substr($course['description'] ?? 'No description', 0, 100)) ?><?= (strlen($course['description'] ?? '') > 100) ? '...' : '' ?></td>
+										<td><?= esc($course['created_at'] ?? 'N/A') ?></td>
+										<td>
+											<a href="<?= base_url('admin/course/' . $course['id'] . '/upload') ?>" class="btn btn-sm btn-primary">Upload</a>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<tr>
+									<td colspan="4" class="text-center text-muted">No courses found.</td>
+								</tr>
+							<?php endif; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	<?php elseif (isset($role) && $role === 'student'): ?>
 		<!-- Student Overview -->
 		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
@@ -245,8 +283,10 @@
 				<div class="row" id="enrolledCoursesList">
 					<?php
 					$enrolledCourses = $enrollmentModel->getUserEnrollments($user_id);
+					$materialModel = new \App\Models\MaterialModel();
 					if (!empty($enrolledCourses)):
 						foreach ($enrolledCourses as $course):
+							$materials = $materialModel->getMaterialsByCourse($course['course_id']);
 					?>
 						<div class="col-md-6 mb-3">
 							<div class="card bg-secondary text-light border-0 h-100">
@@ -261,6 +301,24 @@
 									<small class="text-muted">
 										Enrolled: <?= isset($course['enrollment_date']) ? date('M j, Y', strtotime($course['enrollment_date'])) : 'N/A' ?>
 									</small>
+									<?php if (!empty($materials)): ?>
+										<div class="mt-3">
+											<h6 class="text-white">Course Materials:</h6>
+											<ul class="list-unstyled">
+												<?php foreach ($materials as $material): ?>
+													<li class="mb-2">
+														<a href="<?= base_url('materials/download/' . $material['id']) ?>" class="btn btn-sm btn-success" target="_blank">
+															<i class="fas fa-download"></i> Download <?= esc($material['file_name']) ?>
+														</a>
+													</li>
+												<?php endforeach; ?>
+											</ul>
+										</div>
+									<?php else: ?>
+										<div class="mt-3">
+											<small class="text-muted">No materials available for this course.</small>
+										</div>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>
@@ -415,7 +473,7 @@
 		}
 
 		function addCourseToEnrolled(courseId, courseTitle, courseDescription) {
-			// Create enrolled course card with provided course data
+			// Create enrolled course card without materials (materials will be available after refresh)
 			var enrolledCardHtml = `
 				<div class="col-md-6 mb-3">
 					<div class="card bg-secondary text-light border-0 h-100">
@@ -425,6 +483,7 @@
 							<small class="text-muted">
 								Enrolled: ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
 							</small>
+							<div class="mt-3"><small class="text-muted">Materials will be available after refresh.</small></div>
 						</div>
 					</div>
 				</div>
