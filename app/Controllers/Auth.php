@@ -191,17 +191,31 @@ class Auth extends Controller
 		
 		// Load role-specific data (admin)
 		if ($role === 'admin') {
-			$loginLogModel = new LoginLogModel();
-			$adminData = [
-				'totalUsers' => model(UserModel::class)->countAllResults(),
-				'latestUsers' => model(UserModel::class)
-					->orderBy('created_at', 'DESC')
-					->limit(5)
-					->find(),
-				'recentLogins' => $loginLogModel->getRecentLogins(10),
-				'loginStatsByRole' => $loginLogModel->getLoginStatsByRole(7),
-				'recentUniqueUsers' => $loginLogModel->getRecentUniqueUsers(7, 10),
-			];
+			try {
+				$loginLogModel = new LoginLogModel();
+				$adminData = [
+					'totalUsers' => model(UserModel::class)->countAllResults(),
+					'latestUsers' => model(UserModel::class)
+						->orderBy('created_at', 'DESC')
+						->limit(5)
+						->find(),
+					'recentLogins' => $loginLogModel->getRecentLogins(10),
+					'loginStatsByRole' => $loginLogModel->getLoginStatsByRole(7),
+					'recentUniqueUsers' => $loginLogModel->getRecentUniqueUsers(7, 10),
+				];
+			} catch (\Exception $e) {
+				log_message('error', 'Error loading admin dashboard data: ' . $e->getMessage());
+				$adminData = [
+					'totalUsers' => model(UserModel::class)->countAllResults(),
+					'latestUsers' => model(UserModel::class)
+						->orderBy('created_at', 'DESC')
+						->limit(5)
+						->find(),
+					'recentLogins' => [],
+					'loginStatsByRole' => [],
+					'recentUniqueUsers' => [],
+				];
+			}
 		}
 
 		// Load role-specific data (teacher)
