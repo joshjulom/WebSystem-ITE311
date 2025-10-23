@@ -39,7 +39,6 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <?= $material['file_name'] ?>
                         <div>
-                            <a href="<?= site_url('materials/download/' . $material['id']) ?>" class="btn btn-success btn-sm me-2">Download</a>
                             <a href="<?= site_url('materials/delete/' . $material['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
                         </div>
                     </li>

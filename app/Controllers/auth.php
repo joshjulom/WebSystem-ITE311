@@ -227,17 +227,8 @@ class Auth extends Controller
 				 LIMIT 5",
 				[$userId]
 			)->getResultArray();
-			$courses = $courseModel->where('instructor_id', $userId)->findAll();
-			if (empty($courses)) {
-				$courseModel->insert([
-					'title' => 'Sample Course',
-					'description' => 'This is a sample course for the teacher.',
-					'instructor_id' => $userId,
-				]);
-				$courses = $courseModel->where('instructor_id', $userId)->findAll();
-				$totalCourses = count($courses);
-			}
-			$teacherData = [
+    $courses = $courseModel->where('instructor_id', $userId)->findAll();
+    $teacherData = [
 				'totalCourses' => $totalCourses,
 				'totalStudents' => $totalStudents,
 				'recentEnrollments' => $recentEnrollments,

@@ -179,12 +179,6 @@
 							<div class="h4 mb-0"><?= isset($teacher['totalCourses']) ? esc($teacher['totalCourses']) : '0' ?></div>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="p-3 bg-secondary rounded">
-							<div class="text-muted">Total Students</div>
-							<div class="h4 mb-0"><?= isset($teacher['totalStudents']) ? esc($teacher['totalStudents']) : '0' ?></div>
-						</div>
-					</div>
 					<div class="col-md-12">
 						<div class="p-3 bg-secondary rounded">
 							<div class="text-muted mb-2">Recent Enrollments</div>
