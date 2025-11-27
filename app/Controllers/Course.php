@@ -102,5 +102,38 @@ class Course extends BaseController
         return view('courses/show', $data);
     }
 
+    /**
+     * Search courses method
+     */
+    public function search()
+    {
+        $courseModel = new CourseModel();
+
+        // Get search query from GET or POST
+        $query = $this->request->getGet('query') ?? $this->request->getPost('query') ?? '';
+
+        // Check if request is AJAX
+        $isAjax = $this->request->isAJAX() || $this->request->getHeaderLine('Content-Type') === 'application/json';
+
+        if (!empty($query)) {
+            // Use Query Builder with LIKE for search
+            $courses = $courseModel->like('title', $query, 'both')
+                                   ->orLike('description', $query, 'both')
+                                   ->findAll();
+        } else {
+            // Return all courses if no query
+            $courses = $courseModel->findAll();
+        }
+
+        if ($isAjax) {
+            // Return JSON for AJAX requests
+            return $this->response->setJSON(['courses' => $courses]);
+        } else {
+            // Return view for normal requests
+            $data['courses'] = $courses;
+            return view('courses/index', $data);
+        }
+    }
+
 
 }

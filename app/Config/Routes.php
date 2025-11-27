@@ -18,6 +18,11 @@ $routes->post('login', 'Auth::login');
 $routes->get('logout', 'Auth::logout');
 $routes->get('/dashboard', 'Auth::dashboard');
 
+// Course routes
+$routes->get('/courses', 'Course::index');
+$routes->get('/course/search', 'Course::search');
+$routes->post('/course/search', 'Course::search');
+
 // Course enrollment route
 $routes->post('/course/enroll', 'Course::enroll');
 
