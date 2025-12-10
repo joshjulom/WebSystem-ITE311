@@ -145,5 +145,133 @@ class Course extends BaseController
         }
     }
 
+    /**
+     * Create new course
+     */
+    public function create()
+    {
+        // Check if user is admin or teacher
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return redirect()->to('/login')->with('error', 'Access denied');
+        }
+
+        return view('courses/create');
+    }
+
+    /**
+     * Store new course
+     */
+    public function store()
+    {
+        // Check if user is admin or teacher
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Access denied']);
+        }
+
+        $courseModel = new CourseModel();
+
+        $rules = [
+            'title' => 'required|min_length[3]|max_length[255]',
+            'description' => 'required|min_length[10]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Validation failed', 'errors' => $this->validator->getErrors()]);
+        }
+
+        $data = [
+            'title' => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description'),
+            'instructor_id' => session()->get('user_id')
+        ];
+
+        if ($courseModel->insert($data)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Course created successfully']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to create course']);
+        }
+    }
+
+    /**
+     * Edit course
+     */
+    public function edit($id)
+    {
+        // Check if user is admin or teacher
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return redirect()->to('/login')->with('error', 'Access denied');
+        }
+
+        $courseModel = new CourseModel();
+        $course = $courseModel->find($id);
+
+        if (!$course) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Course not found');
+        }
+
+        $data['course'] = $course;
+        return view('courses/edit', $data);
+    }
+
+    /**
+     * Update course
+     */
+    public function update($id)
+    {
+        // Check if user is admin or teacher
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Access denied']);
+        }
+
+        $courseModel = new CourseModel();
+
+        if (!$courseModel->find($id)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Course not found']);
+        }
+
+        $rules = [
+            'title' => 'required|min_length[3]|max_length[255]',
+            'description' => 'required|min_length[10]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Validation failed', 'errors' => $this->validator->getErrors()]);
+        }
+
+        $data = [
+            'title' => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description')
+        ];
+
+        if ($courseModel->update($id, $data)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Course updated successfully']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to update course']);
+        }
+    }
+
+    /**
+     * Delete course
+     */
+    public function delete($id)
+    {
+        // Check if user is admin or teacher
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Access denied']);
+        }
+
+        $courseModel = new CourseModel();
+
+        if (!$courseModel->find($id)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Course not found']);
+        }
+
+        if ($courseModel->delete($id)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Course deleted successfully']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete course']);
+        }
+    }
+
 
 }

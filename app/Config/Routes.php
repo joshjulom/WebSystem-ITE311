@@ -20,11 +20,19 @@ $routes->get('/dashboard', 'Auth::dashboard');
 
 // Course routes
 $routes->get('/courses', 'Course::index');
+$routes->get('/course', 'Course::index');
 $routes->get('/course/search', 'Course::search');
 $routes->post('/course/search', 'Course::search');
 
 // Course enrollment route
 $routes->post('/course/enroll', 'Course::enroll');
+
+// Course management routes (admin/teacher only)
+$routes->get('/course/create', 'Course::create');
+$routes->post('/course/store', 'Course::store');
+$routes->get('/course/edit/(:num)', 'Course::edit/$1');
+$routes->post('/course/update/(:num)', 'Course::update/$1');
+$routes->post('/course/delete/(:num)', 'Course::delete/$1');
 
 // Materials Routes
 $routes->get('/admin/course/(:num)/upload', 'Materials::upload/$1');

@@ -31,7 +31,10 @@
                     <div class="mt-4">
                         <h5 class="mb-3">Quick Actions</h5>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <a href="<?= base_url('/announcements') ?>" class="btn btn-primary">
+                            <a href="<?= base_url('/course') ?>" class="btn btn-primary">
+                                <i class="fas fa-book"></i> Manage Courses
+                            </a>
+                            <a href="<?= base_url('/announcements') ?>" class="btn btn-secondary">
                                 <i class="fas fa-bullhorn"></i> View Announcements
                             </a>
                         </div>

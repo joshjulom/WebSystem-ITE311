@@ -25,6 +25,18 @@ class Materials extends BaseController
      */
     public function upload($course_id)
     {
+        // Check if user is logged in and has admin/teacher role
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return redirect()->to('/login')->with('error', 'Access denied. Only administrators and teachers can upload materials.');
+        }
+
+        // Check if user account is active
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find(session('user_id'));
+        if (!$user || ($user['status'] ?? 'active') !== 'active') {
+            return redirect()->to('/login')->with('error', 'Your account has been deactivated.');
+        }
+
         if ($this->request->getMethod() === 'POST') {
             // Load upload and validation libraries
             $validation = \Config\Services::validation();
@@ -68,6 +80,18 @@ class Materials extends BaseController
      */
     public function delete($material_id)
     {
+        // Check if user is logged in and has admin/teacher role
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return redirect()->to('/login')->with('error', 'Access denied. Only administrators and teachers can delete materials.');
+        }
+
+        // Check if user account is active
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find(session('user_id'));
+        if (!$user || ($user['status'] ?? 'active') !== 'active') {
+            return redirect()->to('/login')->with('error', 'Your account has been deactivated.');
+        }
+
         $material = $this->materialModel->find($material_id);
         if ($material) {
             // Delete file if exists
