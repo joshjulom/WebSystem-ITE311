@@ -22,6 +22,16 @@ class Course extends BaseController
             ]);
         }
 
+        // Check if user account is active
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find(session('user_id'));
+        if (!$user || ($user['status'] ?? 'active') !== 'active') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Your account has been deactivated.'
+            ]);
+        }
+
         $course_id = $this->request->getPost('course_id');
 
         if (!$course_id) {

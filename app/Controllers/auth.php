@@ -117,9 +117,15 @@ class Auth extends Controller
 					$user = $model->where('email', $email)->first();
 					
 					if ($user && password_verify($password, $user['password'])) {
+						// Check if user account is active
+						if (($user['status'] ?? 'active') !== 'active') {
+							$session->setFlashdata('login_error', 'Your account has been deactivated. Please contact an administrator.');
+							return redirect()->to('login');
+						}
+
 						// Use the name field directly from database
 						$userName = $user['name'] ?? $user['email'];
-						
+
 					// Set session data
 						$sessionData = [
 							'user_id' => $user['id'],
@@ -144,7 +150,7 @@ class Auth extends Controller
 
 						$session->set($sessionData);
 						$session->setFlashdata('success', 'Welcome, ' . $userName . '!');
-						
+
 						return redirect()->to('dashboard');
 					} else {
 						$session->setFlashdata('login_error', 'Invalid email or password.');
@@ -173,13 +179,22 @@ class Auth extends Controller
 	public function dashboard()
 	{
 		$session = session();
-		
+
 		// Authorization: ensure user logged in
 		if (!$session->get('isLoggedIn')) {
 			$session->setFlashdata('login_error', 'Please login to access the dashboard.');
 			return redirect()->to('login');
 		}
-		
+
+		// Check if user account is active
+		$userModel = new UserModel();
+		$user = $userModel->find($session->get('user_id'));
+		if (!$user || ($user['status'] ?? 'active') !== 'active') {
+			$session->destroy();
+			$session->setFlashdata('login_error', 'Your account has been deactivated.');
+			return redirect()->to('login');
+		}
+
 		$role = $session->get('role');
 		// Normalize role aliases
 		if ($role === 'instructor') {

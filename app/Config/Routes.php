@@ -35,3 +35,12 @@ $routes->get('/materials/download/(:num)', 'Materials::download/$1');
 // Notifications Routes
 $routes->get('/notifications', 'Notifications::get');
 $routes->post('/notifications/mark_read/(:num)', 'Notifications::mark_as_read/$1');
+
+// Admin Routes
+$routes->get('/admin/dashboard', 'Admin::dashboard');
+$routes->get('/admin/users', 'Admin::users');
+$routes->post('/admin/updateRole', 'Admin::updateRole');
+$routes->post('/admin/addUser', 'Admin::addUser');
+$routes->post('/admin/updateUser/(:num)', 'Admin::updateUser/$1');
+$routes->post('/admin/changePassword/(:num)', 'Admin::changePassword/$1');
+$routes->post('/admin/toggleStatus/(:num)', 'Admin::toggleStatus/$1');

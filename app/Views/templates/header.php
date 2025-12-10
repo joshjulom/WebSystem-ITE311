@@ -21,9 +21,11 @@ if (session('isLoggedIn')) {
         <li class="nav-item">
           <a class="nav-link <?= uri_string() == 'about' ? 'active' : '' ?>" href="<?= site_url('about') ?>">About</a>
         </li>
+        <?php if (session('isLoggedIn')): ?>
         <li class="nav-item">
           <a class="nav-link <?= uri_string() == 'courses' ? 'active' : '' ?>" href="<?= site_url('courses') ?>">Courses</a>
         </li>
+        <?php endif; ?>
         <li class="nav-item">
           <a class="nav-link <?= uri_string() == 'contact' ? 'active' : '' ?>" href="<?= site_url('contact') ?>">Contact</a>
         </li>
@@ -35,6 +37,11 @@ if (session('isLoggedIn')) {
         <li class="nav-item">
           <a class="nav-link <?= uri_string() == 'dashboard' ? 'active' : '' ?>" href="<?= site_url('dashboard') ?>">Dashboard</a>
         </li>
+        <?php if (session('role') === 'admin'): ?>
+        <li class="nav-item">
+          <a class="nav-link <?= uri_string() == 'admin/users' ? 'active' : '' ?>" href="<?= site_url('admin/users') ?>">Manage Users</a>
+        </li>
+        <?php endif; ?>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Notifications

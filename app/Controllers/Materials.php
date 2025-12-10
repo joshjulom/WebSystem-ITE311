@@ -94,6 +94,13 @@ class Materials extends BaseController
                 return redirect()->to('/login')->with('error', 'Please log in to download materials.');
             }
 
+            // Check if user account is active
+            $userModel = new \App\Models\UserModel();
+            $user = $userModel->find(session('user_id'));
+            if (!$user || ($user['status'] ?? 'active') !== 'active') {
+                return redirect()->to('/login')->with('error', 'Your account has been deactivated.');
+            }
+
             // Check if user is enrolled in the course
             $enrollmentModel = new \App\Models\EnrollmentModel();
             $isEnrolled = $enrollmentModel->isAlreadyEnrolled(session('user_id'), $material['course_id']);

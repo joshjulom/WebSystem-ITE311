@@ -16,6 +16,13 @@ class Notifications extends BaseController
             return $this->respond(['error' => 'Unauthorized'], 401);
         }
 
+        // Check if user account is active
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find(session('user_id'));
+        if (!$user || ($user['status'] ?? 'active') !== 'active') {
+            return $this->respond(['error' => 'Account deactivated'], 403);
+        }
+
         $userId = session('user_id');
         $notificationModel = new NotificationModel();
 
