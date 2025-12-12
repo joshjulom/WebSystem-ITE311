@@ -471,113 +471,6 @@
 			</div>
 		</div>
 
-		<!-- Enrolled Courses Section -->
-		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
-			<div class="card-body">
-				<h5 class="card-title text-white">My Enrolled Courses</h5>
-				<p class="mb-3">Courses you are currently enrolled in.</p>
-				<div class="row" id="enrolledCoursesList">
-					<?php
-					$enrolledCourses = $enrollmentModel->getUserEnrollments($user_id);
-					$materialModel = new \App\Models\MaterialModel();
-					if (!empty($enrolledCourses)):
-						foreach ($enrolledCourses as $course):
-							$materials = $materialModel->getMaterialsByCourse($course['course_id']);
-					?>
-						<div class="col-md-6 mb-3">
-							<div class="card bg-secondary text-light border-0 h-100">
-								<div class="card-body d-flex flex-column">
-									<div class="d-flex justify-content-between align-items-start mb-2">
-										<h6 class="card-title text-white mb-0">
-											<i class="fas fa-graduation-cap text-primary"></i>
-											<?= esc($course['title'] ?? 'Untitled Course') ?>
-										</h6>
-										<?php if (isset($course['course_code']) && $course['course_code']): ?>
-											<span class="badge bg-info"><?= esc($course['course_code']) ?></span>
-										<?php endif; ?>
-									</div>
-									
-									<p class="card-text text-muted mb-3 small">
-										<?= esc(substr($course['description'] ?? 'No description available', 0, 100)) ?>
-										<?= (strlen($course['description'] ?? '') > 100) ? '...' : '' ?>
-									</p>
-									
-									<?php if (isset($course['teacher_name']) && $course['teacher_name']): ?>
-									<div class="mb-2">
-										<small class="text-white">
-											<i class="fas fa-chalkboard-teacher text-warning"></i>
-											<strong>Instructor:</strong> <?= esc($course['teacher_name']) ?>
-										</small>
-									</div>
-									<?php endif; ?>
-									
-									<?php if (isset($course['schedule']) && $course['schedule']): ?>
-									<div class="mb-2">
-										<small class="text-muted">
-											<i class="fas fa-clock text-info"></i>
-											<strong>Schedule:</strong> <?= esc($course['schedule']) ?>
-										</small>
-									</div>
-									<?php endif; ?>
-									
-									<?php if (isset($course['school_year']) && $course['school_year']): ?>
-									<div class="mb-2">
-										<small class="text-muted">
-											<i class="fas fa-calendar-alt text-success"></i>
-											<?= esc($course['school_year']) ?>
-											<?php if (isset($course['semester']) && $course['semester']): ?>
-												- <?= esc($course['semester']) ?>
-											<?php endif; ?>
-										</small>
-									</div>
-									<?php endif; ?>
-									
-									<small class="text-muted d-block mb-3 pb-3 border-bottom border-dark">
-										<i class="fas fa-calendar-check"></i>
-										Enrolled: <?= isset($course['enrollment_date']) ? date('M j, Y', strtotime($course['enrollment_date'])) : 'N/A' ?>
-									</small>
-									
-									<div class="mt-auto">
-										<a href="<?= base_url('assignment/student-view/' . $course['course_id']) ?>" class="btn btn-sm btn-primary w-100 mb-2">
-											<i class="fas fa-clipboard-list"></i> View Assignments
-										</a>
-									</div>
-
-									<?php if (!empty($materials)): ?>
-										<div class="mt-3">
-											<h6 class="text-white">Course Materials:</h6>
-											<ul class="list-unstyled">
-												<?php foreach ($materials as $material): ?>
-													<li class="mb-2">
-														<a href="<?= base_url('materials/download/' . $material['id']) ?>" class="btn btn-sm btn-success" target="_blank">
-															<i class="fas fa-download"></i> Download <?= esc($material['file_name']) ?>
-														</a>
-													</li>
-												<?php endforeach; ?>
-											</ul>
-										</div>
-									<?php else: ?>
-										<div class="mt-3">
-											<small class="text-muted">No materials available for this course.</small>
-										</div>
-									<?php endif; ?>
-								</div>
-							</div>
-						</div>
-					<?php
-						endforeach;
-					else:
-					?>
-						<div class="col-12">
-							<div class="text-center text-muted py-4">
-								<p>You are not enrolled in any courses yet.</p>
-								<p>Browse available courses below and click "Enroll" to get started!</p>
-							</div>
-						</div>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
 
 
 	<?php else: ?>
@@ -725,41 +618,9 @@
 			$('#availableCoursesCount').text(currentCount - 1);
 		}
 
-		function updateEnrolledCoursesCount() {
-			var currentCount = parseInt($('#totalEnrolledCount').text());
-			$('#totalEnrolledCount').text(currentCount + 1);
-		}
-		
 		function updatePendingCount() {
 			var currentCount = parseInt($('#pendingEnrollmentCount').text());
 			$('#pendingEnrollmentCount').text(currentCount + 1);
-		}
-
-		function addCourseToEnrolled(courseId, courseTitle, courseDescription) {
-			// Create enrolled course card without materials (materials will be available after refresh)
-			var enrolledCardHtml = `
-				<div class="col-md-6 mb-3">
-					<div class="card bg-secondary text-light border-0 h-100">
-						<div class="card-body">
-							<h6 class="card-title text-white mb-2">${courseTitle}</h6>
-							<p class="card-text text-muted mb-3">${courseDescription}</p>
-							<small class="text-muted">
-								Enrolled: ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-							</small>
-							<div class="mt-3"><small class="text-muted">Materials will be available after refresh.</small></div>
-						</div>
-					</div>
-				</div>
-			`;
-
-			// Remove empty state message if it exists
-			$('#enrolledCoursesList .text-center').remove();
-
-			// Add to enrolled courses section
-			$('#enrolledCoursesList').append(enrolledCardHtml);
-
-			// Animate the new card
-			$('#enrolledCoursesList .col-md-6:last-child .card').hide().fadeIn(500);
 		}
 	});
 	</script>

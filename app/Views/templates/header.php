@@ -77,12 +77,12 @@ if (session('isLoggedIn')) {
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="coursesDropdown">
             <li>
               <a class="dropdown-item" href="<?= site_url('courses') ?>">
-                <i class="fas fa-search"></i> Browse All Courses
+                <i class="fas fa-search"></i> Available Courses
               </a>
             </li>
             <li><hr class="dropdown-divider" style="border-color: #404449;"></li>
             <li>
-              <a class="dropdown-item" href="<?= site_url('dashboard') ?>">
+              <a class="dropdown-item" href="<?= site_url('my-courses') ?>">
                 <i class="fas fa-graduation-cap"></i> My Enrolled Courses
               </a>
             </li>

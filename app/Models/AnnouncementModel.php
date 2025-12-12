@@ -68,8 +68,8 @@ class AnnouncementModel extends Model
      */
     public function getActiveAnnouncementsFor($audience = 'all', $limit = 5)
     {
-        $builder = $this->where('is_active', 1);
-        
+        $builder = $this->select('announcements.*')->where('is_active', 1);
+
         // Filter by target audience
         if ($audience !== 'all') {
             $builder->groupStart()
@@ -77,13 +77,22 @@ class AnnouncementModel extends Model
                    ->orWhere('target_audience', 'all')
                    ->groupEnd();
         }
-        
+
+        // For students, only show announcements created by admin or teacher
+        if ($audience === 'student') {
+            $builder->join('users', 'users.id = announcements.created_by')
+                   ->groupStart()
+                   ->where('users.role', 'admin')
+                   ->orWhere('users.role', 'teacher')
+                   ->groupEnd();
+        }
+
         // Filter out expired announcements
         $builder->groupStart()
                ->where('expires_at IS NULL')
                ->orWhere('expires_at >', date('Y-m-d H:i:s'))
                ->groupEnd();
-        
+
         return $builder->orderBy('priority', 'DESC')
                       ->orderBy('created_at', 'DESC')
                       ->limit($limit)

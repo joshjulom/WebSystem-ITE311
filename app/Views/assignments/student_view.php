@@ -8,8 +8,8 @@
             <p class="text-muted">View and submit assignments for this course</p>
         </div>
         <div class="col-md-2 text-end">
-            <a href="<?= base_url('dashboard') ?>" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            <a href="<?= base_url('my-courses') ?>" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back
             </a>
         </div>
     </div>
@@ -154,4 +154,3 @@
     <?php endif; ?>
 </div>
 <?= $this->endSection() ?>
-

@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <?php if (session()->has('user_id') && session()->get('role') === 'teacher'): ?>
                         <div class="mt-3">
                             <div class="btn-group w-100" role="group">

@@ -23,6 +23,7 @@ $routes->get('/dashboard', 'Auth::dashboard');
 // Course routes
 $routes->get('/courses', 'Course::index');
 $routes->get('/course', 'Course::index');
+$routes->get('/my-courses', 'Course::myCourses');
 $routes->get('/course/search', 'Course::search');
 $routes->post('/course/search', 'Course::search');
 

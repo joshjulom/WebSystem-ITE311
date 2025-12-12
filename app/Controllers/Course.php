@@ -87,17 +87,17 @@ class Course extends BaseController
                         // Use new format with type and enrollment_id
                         $notificationModel->insert([
                             'user_id' => $user_id,
-                            'message' => 'Your enrollment request for "' . $course['title'] . '" is pending approval',
+                            'message' => "Your enrollment request for course '{$course['title']}' has been submitted and is pending approval",
                             'type' => 'enrollment',
                             'enrollment_id' => $enrollmentId,
                             'is_read' => 0,
                             'created_at' => date('Y-m-d H:i:s')
                         ]);
-                        
+
                         if (!empty($course['instructor_id'])) {
                             $notificationModel->insert([
                                 'user_id' => $course['instructor_id'],
-                                'message' => ($student['name'] ?? 'A student') . ' has requested to enroll in "' . $course['title'] . '"',
+                                'message' => ($student['name'] ?? 'A student') . " has requested to enroll in your '{$course['title']}' course",
                                 'type' => 'enrollment',
                                 'enrollment_id' => $enrollmentId,
                                 'is_read' => 0,
@@ -108,15 +108,15 @@ class Course extends BaseController
                         // Use legacy format without new columns
                         $notificationModel->insert([
                             'user_id' => $user_id,
-                            'message' => 'Your enrollment request for "' . $course['title'] . '" is pending approval',
+                            'message' => "Your enrollment request for course '{$course['title']}' has been submitted and is pending approval",
                             'is_read' => 0,
                             'created_at' => date('Y-m-d H:i:s')
                         ]);
-                        
+
                         if (!empty($course['instructor_id'])) {
                             $notificationModel->insert([
                                 'user_id' => $course['instructor_id'],
-                                'message' => ($student['name'] ?? 'A student') . ' has requested to enroll in "' . $course['title'] . '"',
+                                'message' => ($student['name'] ?? 'A student') . " has requested to enroll in your '{$course['title']}' course",
                                 'is_read' => 0,
                                 'created_at' => date('Y-m-d H:i:s')
                             ]);
@@ -182,7 +182,7 @@ class Course extends BaseController
             // Notify student
             $courseModel = new CourseModel();
             $course = $courseModel->find($enrollment['course_id']);
-            
+
             $notificationModel = new NotificationModel();
             $notificationModel->insert([
                 'user_id' => $enrollment['user_id'],
@@ -190,7 +190,7 @@ class Course extends BaseController
                 'is_read' => 0,
                 'created_at' => date('Y-m-d H:i:s')
             ]);
-            
+
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Enrollment approved successfully'
@@ -242,7 +242,7 @@ class Course extends BaseController
             // Notify student
             $courseModel = new CourseModel();
             $course = $courseModel->find($enrollment['course_id']);
-            
+
             $notificationModel = new NotificationModel();
             $notificationModel->insert([
                 'user_id' => $enrollment['user_id'],
@@ -250,7 +250,7 @@ class Course extends BaseController
                 'is_read' => 0,
                 'created_at' => date('Y-m-d H:i:s')
             ]);
-            
+
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Enrollment request rejected'
@@ -302,6 +302,96 @@ class Course extends BaseController
         }
 
         return view('courses/index', $data);
+    }
+
+    /**
+     * Show student's enrolled courses (Student only)
+     */
+    public function myCourses()
+    {
+        // Check if user is logged in and is student
+        if (!session()->has('user_id') || session()->get('role') !== 'student') {
+            return redirect()->to('/courses')->with('error', 'Access denied. Only students can view enrolled courses.');
+        }
+
+        $user_id = session('user_id');
+        $enrollmentModel = new EnrollmentModel();
+        $materialModel = new \App\Models\MaterialModel();
+        $assignmentModel = new \App\Models\AssignmentModel();
+        $submissionModel = new \App\Models\AssignmentSubmissionModel();
+
+        $enrolledCourses = $enrollmentModel->getUserEnrollments($user_id);
+
+        // Add materials information to courses (rebuild array cleanly to avoid reference issues)
+        $processedCourses = [];
+        foreach ($enrolledCourses as $course) {
+            $course['materials'] = $materialModel->getMaterialsByCourse($course['course_id']);
+            $processedCourses[] = $course;
+        }
+        $data['enrolledCourses'] = $processedCourses;
+
+        // Calculate student statistics
+        $stats = [
+            'upcomingDeadlines' => 0,
+            'recentGrade' => 'N/A',
+            'overallProgress' => 0,
+            'totalAssignments' => 0
+        ];
+
+        if (!empty($data['enrolledCourses'])) {
+            $totalAssignments = 0;
+            $completedAssignments = 0;
+            $upcomingDeadlines = 0;
+            $recentGrades = [];
+
+            foreach ($data['enrolledCourses'] as $course) {
+                // Get assignments for this course
+                $assignments = $assignmentModel->where('course_id', $course['course_id'])
+                                              ->findAll();
+
+                foreach ($assignments as $assignment) {
+                    $totalAssignments++;
+
+                    // Check for upcoming deadlines (next 7 days)
+                    if (!empty($assignment['due_date'])) {
+                        $dueDate = strtotime($assignment['due_date']);
+                        $now = time();
+                        $oneWeekFromNow = strtotime('+7 days', $now);
+
+                        if ($dueDate >= $now && $dueDate <= $oneWeekFromNow) {
+                            $upcomingDeadlines++;
+                        }
+                    }
+
+                    // Get submission and grade for recent grades
+                    $submission = $submissionModel->getSubmission($assignment['id'], $user_id);
+                    if ($submission) {
+                        $completedAssignments++;
+                        if ($submission['status'] === 'Graded' && !empty($submission['grade'])) {
+                            $recentGrades[] = (int)$submission['grade'];
+                        }
+                    }
+                }
+            }
+
+            $stats['upcomingDeadlines'] = $upcomingDeadlines;
+            $stats['totalAssignments'] = $totalAssignments;
+
+            // Calculate recent grade (latest graded assignment)
+            if (!empty($recentGrades)) {
+                rsort($recentGrades); // Sort descending to get highest recent grade
+                $stats['recentGrade'] = $recentGrades[0] . '/100';
+            }
+
+            // Calculate overall progress (completed/total assignments)
+            if ($totalAssignments > 0) {
+                $stats['overallProgress'] = round(($completedAssignments / $totalAssignments) * 100);
+            }
+        }
+
+        $data['stats'] = $stats;
+
+        return view('courses/my_courses', $data);
     }
 
     /**

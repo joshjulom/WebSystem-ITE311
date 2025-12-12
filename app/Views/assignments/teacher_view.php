@@ -30,8 +30,13 @@
 
     <div class="card bg-dark text-light border-0 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title text-white mb-3">Assignments List</h5>
-            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title text-white mb-0">Assignments List</h5>
+                <a href="<?= base_url('assignment/create/' . $course['id']) ?>" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Assignment
+                </a>
+            </div>
+
             <?php if (!empty($assignments)): ?>
                 <div class="table-responsive">
                     <table class="table table-dark table-hover align-middle">
@@ -90,9 +95,6 @@
                 <div class="text-center py-5">
                     <i class="fas fa-clipboard-list fa-4x text-muted mb-3"></i>
                     <p class="text-muted">No assignments created yet</p>
-                    <a href="<?= base_url('assignment/create/' . $course['id']) ?>" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Create Your First Assignment
-                    </a>
                 </div>
             <?php endif; ?>
         </div>
