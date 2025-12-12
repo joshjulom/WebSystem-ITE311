@@ -270,12 +270,22 @@ class Course extends BaseController
     {
         $courseModel = new CourseModel();
         $enrollmentModel = new EnrollmentModel();
-        
-        // Get courses with teacher information
-        $data['courses'] = $courseModel->getCoursesWithTeachers();
-        
+        $userModel = new \App\Models\UserModel();
+
+        $userRole = session()->get('role');
+        $userId = session()->get('user_id');
+
+        // Get appropriate courses based on user role
+        if ($userId && $userRole === 'student') {
+            // For students, show only available courses (not enrolled)
+            $data['courses'] = $enrollmentModel->getAvailableCourses($userId);
+        } else {
+            // For teachers/admin/guest, show all courses
+            $data['courses'] = $courseModel->getCoursesWithTeachers();
+        }
+
         // If user is teacher/admin, get enrollment counts for each course
-        if (session()->has('user_id') && in_array(session()->get('role'), ['admin', 'teacher'])) {
+        if ($userId && in_array($userRole, ['admin', 'teacher'])) {
             $enrollmentCounts = [];
             foreach ($data['courses'] as $course) {
                 $enrollmentCounts[$course['id']] = [
@@ -284,6 +294,11 @@ class Course extends BaseController
                 ];
             }
             $data['enrollmentCounts'] = $enrollmentCounts;
+        }
+
+        // If user is admin, get teachers list for modal
+        if ($userId && $userRole === 'admin') {
+            $data['teachers'] = $userModel->where('role', 'teacher')->findAll();
         }
 
         return view('courses/index', $data);
@@ -330,6 +345,7 @@ class Course extends BaseController
     public function search()
     {
         $courseModel = new CourseModel();
+        $enrollmentModel = new EnrollmentModel();
 
         // Get search query from GET or POST
         $query = $this->request->getGet('query') ?? $this->request->getPost('query') ?? '';
@@ -337,22 +353,51 @@ class Course extends BaseController
         // Check if request is AJAX
         $isAjax = $this->request->isAJAX() || $this->request->getHeaderLine('Content-Type') === 'application/json';
 
-        if (!empty($query)) {
-            // Use Query Builder with LIKE for search
-            $courses = $courseModel->like('title', $query, 'both')
-                                   ->orLike('description', $query, 'both')
-                                   ->findAll();
+        $userRole = session()->get('role');
+        $userId = session()->get('user_id');
+
+        // Get appropriate courses based on user role
+        if ($userId && $userRole === 'student') {
+            // For students, search from available courses
+            if (!empty($query)) {
+                // Need to do search on available courses - first get available, then filter by query
+                $availableCourses = $enrollmentModel->getAvailableCourses($userId);
+                $courses = array_filter($availableCourses, function($course) use ($query) {
+                    return stripos($course['title'], $query) !== false || stripos($course['description'], $query) !== false;
+                });
+            } else {
+                $courses = $enrollmentModel->getAvailableCourses($userId);
+            }
         } else {
-            // Return all courses if no query
-            $courses = $courseModel->findAll();
+            // For teachers/admin/guest, search from all courses
+            if (!empty($query)) {
+                // Use Query Builder with LIKE for search
+                $courses = $courseModel->like('title', $query, 'both')
+                                       ->orLike('description', $query, 'both')
+                                       ->findAll();
+            } else {
+                // Return all courses if no query
+                $courses = $courseModel->getCoursesWithTeachers();
+            }
         }
 
         if ($isAjax) {
             // Return JSON for AJAX requests
-            return $this->response->setJSON(['courses' => $courses]);
+            return $this->response->setJSON(['courses' => array_values($courses)]);
         } else {
             // Return view for normal requests
-            $data['courses'] = $courses;
+            $data['courses'] = array_values($courses);
+            // If user is teacher/admin, get enrollment counts for each course
+            if ($userId && in_array($userRole, ['admin', 'teacher'])) {
+                $enrollmentCounts = [];
+                foreach ($data['courses'] as $course) {
+                    $enrollmentCounts[$course['id']] = [
+                        'approved' => $enrollmentModel->getEnrollmentCount($course['id'], 'approved'),
+                        'pending' => $enrollmentModel->getEnrollmentCount($course['id'], 'pending')
+                    ];
+                }
+                $data['enrollmentCounts'] = $enrollmentCounts;
+            }
             return view('courses/index', $data);
         }
     }
@@ -510,17 +555,17 @@ class Course extends BaseController
                 'message' => 'Unauthorized access'
             ]);
         }
-        
-        $enrollmentModel = new EnrollmentModel();
+
+        $enrollmentModel = new \App\Models\EnrollmentModel();
         $enrollment = $enrollmentModel->find($enrollment_id);
-        
+
         if (!$enrollment) {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Enrollment not found'
             ]);
         }
-        
+
         // Verify the enrollment belongs to the current user
         if ($enrollment['user_id'] != session('user_id')) {
             return $this->response->setJSON([
@@ -528,7 +573,7 @@ class Course extends BaseController
                 'message' => 'You do not have permission to remove this enrollment'
             ]);
         }
-        
+
         // Verify the enrollment is rejected
         if ($enrollment['status'] !== 'rejected') {
             return $this->response->setJSON([
@@ -536,19 +581,184 @@ class Course extends BaseController
                 'message' => 'Only rejected enrollments can be removed'
             ]);
         }
-        
+
         if ($enrollmentModel->cleanupRejectedEnrollment($enrollment_id)) {
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Rejected enrollment removed successfully'
             ]);
         }
-        
+
         return $this->response->setJSON([
             'success' => false,
             'message' => 'Failed to remove enrollment'
         ]);
     }
 
+    /**
+     * Assign teacher to course (Admin only)
+     */
+    public function assignTeacher($courseId)
+    {
+        // Check if user is admin
+        if (!session()->has('user_id') || session()->get('role') !== 'admin') {
+            return redirect()->to('/login')->with('error', 'Access denied. Admin only.');
+        }
+
+        $courseModel = new CourseModel();
+        $userModel = new \App\Models\UserModel();
+
+        $course = $courseModel->find($courseId);
+
+        if (!$course) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Course not found');
+        }
+
+        $data['course'] = $course;
+        $data['teachers'] = $userModel->where('role', 'teacher')->findAll();
+
+        // Handle POST request
+        if ($this->request->getMethod() === 'POST') {
+            $teacherId = $this->request->getPost('teacher_id');
+            $semester = $this->request->getPost('semester');
+            $academicYear = $this->request->getPost('academic_year');
+            $maxStudents = $this->request->getPost('max_students');
+            $scheduleArray = $this->request->getPost('schedule') ?? [];
+            $startTime = $this->request->getPost('start_time');
+            $endTime = $this->request->getPost('end_time');
+
+            // Schedule as comma-separated string
+            $schedule = empty($scheduleArray) ? null : implode(',', $scheduleArray);
+
+            $updateData = [
+                'semester' => $semester,
+                'school_year' => $academicYear,
+                'max_students' => $maxStudents,
+                'schedule' => $schedule,
+                'start_time' => $startTime,
+                'end_time' => $endTime,
+                'instructor_id' => empty($teacherId) ? null : $teacherId
+            ];
+
+            try {
+                if ($courseModel->update($courseId, $updateData)) {
+                    $successMessage = !empty($teacherId) ? 'Teacher assigned and course updated successfully!' : 'Teacher removed and course updated successfully!';
+                    $data['success'] = $successMessage;
+
+                    // Re-fetch course data
+                    $data['course'] = $courseModel->find($courseId);
+                    return view('courses/assign_teacher', $data);
+                } else {
+                    $data['error'] = 'Failed to update course. Please try again.';
+                    return view('courses/assign_teacher', $data);
+                }
+            } catch (\Exception $e) {
+                $data['error'] = 'An error occurred: ' . $e->getMessage();
+                return view('courses/assign_teacher', $data);
+            }
+        }
+
+        return view('courses/assign_teacher', $data);
+    }
+
+    /**
+     * Update teacher assignment via AJAX (Admin only)
+     */
+    public function updateTeacher($courseId)
+    {
+        // Check if user is admin
+        if (!session()->has('user_id') || session()->get('role') !== 'admin') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Access denied. Admin only.'
+            ]);
+        }
+
+        $courseModel = new CourseModel();
+        $teacherId = $this->request->getPost('teacher_id');
+
+        if (!$teacherId) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Please select a teacher.'
+            ]);
+        }
+
+        if ($courseModel->update($courseId, ['instructor_id' => $teacherId])) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Teacher assigned successfully!'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Failed to assign teacher. Please try again.'
+            ]);
+        }
+    }
+
+    /**
+     * Manage students in course (Admin only)
+     */
+    public function manageStudents($courseId)
+    {
+        // Check if user is admin
+        if (!session()->has('user_id') || session()->get('role') !== 'admin') {
+            return redirect()->to('/login')->with('error', 'Access denied. Admin only.');
+        }
+
+        $courseModel = new CourseModel();
+        $enrollmentModel = new \App\Models\EnrollmentModel();
+        $userModel = new \App\Models\UserModel();
+
+        $course = $courseModel->find($courseId);
+
+        if (!$course) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Course not found');
+        }
+
+        $data['course'] = $course;
+        $data['enrolledStudents'] = $enrollmentModel->getEnrolledStudents($courseId);
+        $data['pendingRequests'] = $enrollmentModel->getPendingRequestsForCourse($courseId);
+        $data['allStudents'] = $userModel->where('role', 'student')->findAll();
+
+        return view('courses/manage_students', $data);
+    }
+
+    /**
+     * Remove student from course (Admin only)
+     */
+    public function removeStudent($enrollmentId)
+    {
+        // Check if user is admin
+        if (!session()->has('user_id') || session()->get('role') !== 'admin') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Access denied. Admin only.'
+            ]);
+        }
+
+        $enrollmentModel = new \App\Models\EnrollmentModel();
+        $enrollment = $enrollmentModel->find($enrollmentId);
+
+        if (!$enrollment) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Enrollment not found'
+            ]);
+        }
+
+        if ($enrollmentModel->delete($enrollmentId)) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Student removed from course successfully!'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Failed to remove student from course.'
+            ]);
+        }
+    }
 
 }

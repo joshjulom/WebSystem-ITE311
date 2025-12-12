@@ -95,10 +95,12 @@ class AnnouncementModel extends Model
      */
     public function getAllWithCreator()
     {
-        return $this->select('announcements.*, users.name as creator_name')
-                    ->join('users', 'users.id = announcements.created_by', 'left')
-                    ->orderBy('announcements.created_at', 'DESC')
-                    ->findAll();
+        return $this->db->query("
+            SELECT a.*, u.name as creator_name
+            FROM announcements a
+            LEFT JOIN users u ON u.id = a.created_by
+            ORDER BY a.created_at DESC
+        ")->getResultArray();
     }
 
     /**

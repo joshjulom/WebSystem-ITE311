@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\AssignmentModel;
 use App\Models\AssignmentSubmissionModel;
+use App\Models\AssignmentQuestionModel;
 use App\Models\CourseModel;
 use App\Models\EnrollmentModel;
 use App\Models\NotificationModel;
@@ -13,12 +14,14 @@ class Assignment extends BaseController
 {
     protected $assignmentModel;
     protected $submissionModel;
+    protected $questionModel;
     protected $courseModel;
 
     public function __construct()
     {
         $this->assignmentModel = new AssignmentModel();
         $this->submissionModel = new AssignmentSubmissionModel();
+        $this->questionModel = new AssignmentQuestionModel();
         $this->courseModel = new CourseModel();
     }
 
@@ -80,6 +83,8 @@ class Assignment extends BaseController
             'course_id' => 'required|integer',
             'title' => 'required|min_length[3]|max_length[255]',
             'description' => 'required',
+            'max_score' => 'required|decimal',
+            'status' => 'required|in_list[draft,published,closed]',
             'due_date' => 'permit_empty|valid_date',
             'assignment_file' => 'permit_empty|uploaded[assignment_file]|max_size[assignment_file,10240]|ext_in[assignment_file,pdf,doc,docx,ppt,pptx,txt,zip]'
         ];
@@ -94,7 +99,7 @@ class Assignment extends BaseController
 
         $courseId = $this->request->getPost('course_id');
         $course = $this->courseModel->find($courseId);
-        
+
         // Verify teacher owns this course
         if (session()->get('role') === 'teacher' && $course['instructor_id'] != session()->get('user_id')) {
             return $this->response->setJSON(['success' => false, 'message' => 'Access denied']);
@@ -103,16 +108,16 @@ class Assignment extends BaseController
         // Handle file upload
         $fileName = null;
         $file = $this->request->getFile('assignment_file');
-        
+
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $fileName = $file->getRandomName();
             $uploadPath = WRITEPATH . 'uploads/assignments/';
-            
+
             // Create directory if it doesn't exist
             if (!is_dir($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
-            
+
             $file->move($uploadPath, $fileName);
         }
 
@@ -121,6 +126,8 @@ class Assignment extends BaseController
             'title' => $this->request->getPost('title'),
             'description' => $this->request->getPost('description'),
             'due_date' => $this->request->getPost('due_date') ?: null,
+            'max_score' => $this->request->getPost('max_score'),
+            'status' => $this->request->getPost('status'),
             'file_attachment' => $fileName,
             'created_by' => session()->get('user_id')
         ];
@@ -128,18 +135,60 @@ class Assignment extends BaseController
         $assignmentId = $this->assignmentModel->insert($data);
 
         if ($assignmentId) {
-            // Notify all enrolled students
-            $enrollmentModel = new EnrollmentModel();
-            $enrolledStudents = $enrollmentModel->where('course_id', $courseId)->findAll();
-            
-            $notificationModel = new NotificationModel();
-            foreach ($enrolledStudents as $enrollment) {
-                $notificationModel->insert([
-                    'user_id' => $enrollment['user_id'],
-                    'message' => 'New assignment posted: ' . $data['title'],
-                    'is_read' => 0,
-                    'created_at' => date('Y-m-d H:i:s')
-                ]);
+            // Save questions if provided
+            $questionsData = $this->request->getPost('questions');
+            if ($questionsData) {
+                $questions = json_decode($questionsData, true);
+                if ($questions && is_array($questions)) {
+                    foreach ($questions as $question) {
+                        $questionData = [
+                            'assignment_id' => $assignmentId,
+                            'question_type' => $question['question_type'],
+                            'question_text' => $question['question_text'] ?? null,
+                            'max_points' => $question['max_points'],
+                            'order_position' => $question['order_position'] ?? 0
+                        ];
+
+                        // Handle different question types
+                        if ($question['question_type'] === 'multiple_choice' && isset($question['options'])) {
+                            $optionsArray = [];
+                            foreach ($question['options'] as $option) {
+                                $optionsArray[] = [
+                                    'text' => $option['text'],
+                                    'is_correct' => $option['is_correct']
+                                ];
+                            }
+                            $questionData['options'] = json_encode($optionsArray);
+                            // Find the correct answer
+                            foreach ($question['options'] as $option) {
+                                if ($option['is_correct']) {
+                                    $questionData['correct_answer'] = $option['text'];
+                                    break;
+                                }
+                            }
+                        } elseif ($question['question_type'] === 'essay') {
+                            $questionData['correct_answer'] = $question['correct_answer'] ?? null;
+                        }
+
+                        $this->questionModel->insert($questionData);
+                    }
+                }
+            }
+
+            // Notify all enrolled students only if published
+            if ($data['status'] === 'published') {
+                $enrollmentModel = new EnrollmentModel();
+                $enrolledStudents = $enrollmentModel->where('course_id', $courseId)->findAll();
+
+                $notificationModel = new NotificationModel();
+                foreach ($enrolledStudents as $enrollment) {
+                    $notificationModel->insert([
+                        'user_id' => $enrollment['user_id'],
+                        'message' => 'New assignment posted: ' . $data['title'],
+                        'is_read' => 0,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
             }
 
             return $this->response->setJSON([
@@ -468,4 +517,3 @@ class Assignment extends BaseController
         }
     }
 }
-

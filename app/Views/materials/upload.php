@@ -12,8 +12,8 @@
                     </h1>
                     <p class="text-muted mb-0">Add learning materials for your course</p>
                 </div>
-                <a href="<?= site_url('/dashboard') ?>" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                <a href="<?= site_url('/course') ?>" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Courses
                 </a>
             </div>
         </div>

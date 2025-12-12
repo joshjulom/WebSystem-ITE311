@@ -91,10 +91,17 @@ if (session('isLoggedIn')) {
         <?php else: ?>
         <!-- Teacher/Admin Navigation -->
         <li class="nav-item">
-          <a class="nav-link <?= uri_string() == 'courses' || uri_string() == 'course' ? 'active' : '' ?>" href="<?= site_url('courses') ?>">
-            <i class="fas fa-book"></i>
-            <span>Courses</span>
-          </a>
+          <?php if (session('role') === 'admin'): ?>
+            <a class="nav-link <?= uri_string() == 'courses' || strpos(uri_string(), 'course') !== false ? 'active' : '' ?>" href="<?= site_url('courses') ?>">
+              <i class="fas fa-cog"></i>
+              <span>Manage Courses</span>
+            </a>
+          <?php else: ?>
+            <a class="nav-link <?= uri_string() == 'courses' || strpos(uri_string(), 'course') !== false ? 'active' : '' ?>" href="<?= site_url('courses') ?>">
+              <i class="fas fa-book"></i>
+              <span>Courses</span>
+            </a>
+          <?php endif; ?>
         </li>
         <?php endif; ?>
         <?php if (session('role') === 'admin' || session('role') === 'teacher'): ?>
@@ -108,12 +115,6 @@ if (session('isLoggedIn')) {
             <?php endif; ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="announcementDropdown">
-            <li>
-              <a class="dropdown-item" href="<?= site_url('announcements') ?>">
-                <i class="fas fa-list"></i> View All
-              </a>
-            </li>
-            <li><hr class="dropdown-divider" style="border-color: #404449;"></li>
             <li>
               <a class="dropdown-item" href="<?= site_url('announcement/manage') ?>">
                 <i class="fas fa-cog"></i> Manage Announcements

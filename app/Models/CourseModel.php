@@ -18,6 +18,9 @@ class CourseModel extends Model
         'description',
         'school_year',
         'semester',
+        'max_students',
+        'start_time',
+        'end_time',
         'start_date',
         'end_date',
         'schedule',
@@ -35,8 +38,7 @@ class CourseModel extends Model
     // Validation
     protected $validationRules = [
         'title' => 'required|min_length[3]|max_length[255]',
-        'description' => 'required|min_length[10]',
-        'instructor_id' => 'required|integer'
+        'description' => 'required|min_length[10]'
     ];
 
     protected $validationMessages = [];

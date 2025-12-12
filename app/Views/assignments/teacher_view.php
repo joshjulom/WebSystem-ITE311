@@ -8,11 +8,8 @@
             <p class="text-muted">Manage assignments for this course</p>
         </div>
         <div class="col-md-4 text-end">
-            <a href="<?= base_url('assignment/create/' . $course['id']) ?>" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Create New Assignment
-            </a>
-            <a href="<?= base_url('dashboard') ?>" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            <a href="<?= base_url('course') ?>" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Courses
             </a>
         </div>
     </div>
@@ -137,4 +134,3 @@ $(document).ready(function() {
 });
 </script>
 <?= $this->endSection() ?>
-

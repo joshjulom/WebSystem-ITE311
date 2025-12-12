@@ -17,6 +17,8 @@ class AssignmentModel extends Model
         'title',
         'description',
         'due_date',
+        'max_score',
+        'status',
         'file_attachment',
         'created_by'
     ];
@@ -127,4 +129,3 @@ class AssignmentModel extends Model
         return $this->delete($id);
     }
 }
-

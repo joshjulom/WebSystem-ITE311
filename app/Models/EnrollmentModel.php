@@ -160,6 +160,19 @@ class EnrollmentModel extends Model
                     ->where('enrollments.status', 'approved')
                     ->findAll();
     }
+
+    /**
+     * Get pending enrollment requests for a specific course
+     */
+    public function getPendingRequestsForCourse($course_id)
+    {
+        return $this->select('enrollments.*, users.name as student_name, users.email as student_email')
+                    ->join('users', 'users.id = enrollments.user_id')
+                    ->where('enrollments.course_id', $course_id)
+                    ->where('enrollments.status', 'pending')
+                    ->orderBy('enrollments.enrollment_date', 'DESC')
+                    ->findAll();
+    }
     
     /**
      * Get enrollment count for a course

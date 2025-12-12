@@ -279,19 +279,25 @@ class Auth extends Controller
 				[$userId]
 			)->getResultArray();
 			$pendingRequests = $enrollmentModel->getPendingRequestsForTeacher($userId);
-			
+
 			// Debug: Log pending requests
 			log_message('info', 'Teacher ID: ' . $userId);
 			log_message('info', 'Pending Requests Count: ' . count($pendingRequests));
 			log_message('info', 'Pending Requests: ' . print_r($pendingRequests, true));
-			
+
 			$courses = $courseModel->where('instructor_id', $userId)->findAll();
+
+			// Get all teachers for modal dropdown
+			$userModelForTeachers = new UserModel();
+			$allTeachers = $userModelForTeachers->where('role', 'teacher')->findAll();
+
 			$teacherData = [
 				'totalCourses' => $totalCourses,
 				'totalStudents' => $totalStudents,
 				'recentEnrollments' => $recentEnrollments,
 				'pendingRequests' => $pendingRequests,
 				'courses' => $courses,
+				'teachers' => $allTeachers,
 			];
 		}
 

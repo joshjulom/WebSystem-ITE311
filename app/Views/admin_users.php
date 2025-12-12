@@ -312,8 +312,7 @@ $(document).ready(function() {
     $('.toggle-status-btn').click(function() {
         const userId = $(this).data('user-id');
         const name = $(this).data('name');
-        const currentStatus = $(this).data('current-status');
-        const action = currentStatus === 'active' ? 'deactivate' : 'activate';
+        const action = $(this).text().trim().toLowerCase();
 
         if (confirm(`Are you sure you want to ${action} user ${name}?`)) {
             $.post('<?= base_url("/admin/toggleStatus/") ?>' + userId, {}, function(response) {

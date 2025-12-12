@@ -40,18 +40,8 @@ class Announcement extends Controller
             return redirect()->to('/dashboard')->with('error', 'Access denied');
         }
 
-        // Teachers can only see their own announcements, admins see all
-        if (session()->get('role') === 'teacher') {
-            $announcements = $this->announcementModel->where('created_by', session()->get('user_id'))
-                                                     ->orderBy('created_at', 'DESC')
-                                                     ->findAll();
-            // Add creator name manually for teachers viewing their own
-            foreach ($announcements as &$announcement) {
-                $announcement['creator_name'] = session()->get('user_name');
-            }
-        } else {
-            $announcements = $this->announcementModel->getAllWithCreator();
-        }
+        // Return empty array to test if page loads
+        $announcements = [];
 
         return view('announcements/manage', [
             'announcements' => $announcements

@@ -23,16 +23,11 @@
 	</div>
 
 	<?php if (isset($role) && $role === 'admin'): ?>
-		<!-- Course Management Dashboard -->
-		<div class="row mb-4">
-			<div class="col-12">
-				<h2 class="text-white mb-3">Course Management</h2>
-			</div>
-		</div>
+
 
 		<!-- Summary Cards -->
 		<div class="row g-3 mb-4">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="card shadow-sm border-0 bg-dark text-light">
 					<div class="card-body">
 						<div class="d-flex justify-content-between align-items-center">
@@ -47,214 +42,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
-				<div class="card shadow-sm border-0 bg-dark text-light">
-					<div class="card-body">
-						<div class="d-flex justify-content-between align-items-center">
-							<div>
-								<p class="text-muted mb-1">Active Courses</p>
-								<h3 class="mb-0" id="activeCoursesCount"><?= isset($admin['activeCourses']) ? esc($admin['activeCourses']) : '0' ?></h3>
-							</div>
-							<div class="bg-success rounded-circle p-3">
-								<i class="fas fa-check-circle text-white fs-4"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
-
-		<!-- Courses Table -->
-		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
-			<div class="card-body">
-				<h5 class="card-title text-white mb-3">All Courses</h5>
-				<div class="table-responsive">
-					<table class="table table-dark table-hover align-middle">
-						<thead class="table-secondary">
-							<tr>
-								<th style="width: 7%;">Course Code</th>
-								<th style="width: 12%;">Course Title</th>
-								<th style="width: 18%;">Description</th>
-								<th style="width: 9%;">School Year</th>
-								<th style="width: 9%;">Semester</th>
-								<th style="width: 10%;">Schedule</th>
-								<th style="width: 10%;">Teacher</th>
-								<th style="width: 7%;">Active Users</th>
-								<th style="width: 10%;">Status</th>
-								<th style="width: 8%;">Actions</th>
-							</tr>
-						</thead>
-						<tbody id="coursesTableBody">
-							<?php if (!empty($admin['courses'])): ?>
-								<?php foreach ($admin['courses'] as $course): ?>
-									<tr data-course-id="<?= esc($course['id']) ?>">
-										<td><span class="badge bg-info"><?= esc($course['course_code'] ?? 'N/A') ?></span></td>
-										<td><strong><?= esc($course['title'] ?? 'Untitled') ?></strong></td>
-										<td><?= esc(substr($course['description'] ?? 'No description', 0, 60)) ?><?= (strlen($course['description'] ?? '') > 60) ? '...' : '' ?></td>
-										<td><?= esc($course['school_year'] ?? 'N/A') ?></td>
-										<td><?= esc($course['semester'] ?? 'N/A') ?></td>
-										<td><?= esc($course['schedule'] ?? 'N/A') ?></td>
-										<td><?= esc($course['teacher_name'] ?? 'Unassigned') ?></td>
-										<td class="text-center">
-											<span class="badge bg-success"><?= esc($course['active_users'] ?? '0') ?></span>
-										</td>
-										<td>
-											<select class="form-select form-select-sm status-dropdown" data-course-id="<?= esc($course['id']) ?>">
-												<option value="Active" <?= ($course['status'] ?? 'Active') === 'Active' ? 'selected' : '' ?>>Active</option>
-												<option value="Inactive" <?= ($course['status'] ?? 'Active') === 'Inactive' ? 'selected' : '' ?>>Inactive</option>
-											</select>
-										</td>
-										<td>
-											<button class="btn btn-sm btn-outline-light edit-course-btn" data-course-id="<?= esc($course['id']) ?>">
-												<i class="fas fa-edit"></i> Edit
-											</button>
-										</td>
-									</tr>
-								<?php endforeach; ?>
-							<?php else: ?>
-								<tr>
-									<td colspan="10" class="text-center text-muted py-4">No courses found.</td>
-								</tr>
-							<?php endif; ?>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-		<!-- Edit Course Modal -->
-		<div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content bg-dark text-light">
-					<div class="modal-header border-secondary">
-						<h5 class="modal-title" id="editCourseModalLabel">Edit Course Details</h5>
-						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<form id="editCourseForm">
-							<input type="hidden" id="editCourseId">
-							
-							<div class="row mb-3">
-								<div class="col-md-6">
-									<label for="editCourseCode" class="form-label">Course Code</label>
-									<input type="text" class="form-control" id="editCourseCode" readonly>
-								</div>
-								<div class="col-md-6">
-									<label for="editCourseTitle" class="form-label">Course Title <span class="text-danger">*</span></label>
-									<input type="text" class="form-control" id="editCourseTitle" required>
-								</div>
-							</div>
-
-							<div class="mb-3">
-								<label for="editCourseDescription" class="form-label">Description <span class="text-danger">*</span></label>
-								<textarea class="form-control" id="editCourseDescription" rows="3" required></textarea>
-							</div>
-
-							<div class="row mb-3">
-								<div class="col-md-6">
-									<label for="editSchoolYear" class="form-label">School Year</label>
-									<select class="form-select" id="editSchoolYear">
-										<option value="">Select School Year</option>
-										<option value="2023-2024">2023-2024</option>
-										<option value="2024-2025">2024-2025</option>
-										<option value="2025-2026">2025-2026</option>
-										<option value="2026-2027">2026-2027</option>
-									</select>
-								</div>
-								<div class="col-md-6">
-									<label for="editSemester" class="form-label">Semester</label>
-									<select class="form-select" id="editSemester">
-										<option value="">Select Semester</option>
-										<option value="1st Semester">1st Semester</option>
-										<option value="2nd Semester">2nd Semester</option>
-										<option value="Summer">Summer</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="row mb-3">
-								<div class="col-md-6">
-									<label for="editStartDate" class="form-label">Start Date</label>
-									<input type="date" class="form-control" id="editStartDate">
-								</div>
-								<div class="col-md-6">
-									<label for="editEndDate" class="form-label">End Date</label>
-									<input type="date" class="form-control" id="editEndDate">
-								</div>
-							</div>
-
-							<div class="row mb-3">
-								<div class="col-md-6">
-									<label for="editTeacher" class="form-label">Teacher</label>
-									<select class="form-select" id="editTeacher">
-										<option value="">Select Teacher</option>
-										<?php if (!empty($admin['teachers'])): ?>
-											<?php foreach ($admin['teachers'] as $teacher): ?>
-												<option value="<?= esc($teacher['id']) ?>"><?= esc($teacher['name']) ?></option>
-											<?php endforeach; ?>
-										<?php endif; ?>
-									</select>
-								</div>
-								<div class="col-md-6">
-									<label for="editSchedule" class="form-label">Schedule</label>
-									<select class="form-select" id="editSchedule">
-										<option value="">Select Schedule</option>
-										<option value="MWF 8:00-9:00 AM">MWF 8:00-9:00 AM</option>
-										<option value="MWF 9:00-10:00 AM">MWF 9:00-10:00 AM</option>
-										<option value="MWF 10:00-11:00 AM">MWF 10:00-11:00 AM</option>
-										<option value="MWF 1:00-2:00 PM">MWF 1:00-2:00 PM</option>
-										<option value="MWF 2:00-3:00 PM">MWF 2:00-3:00 PM</option>
-										<option value="TTH 8:00-9:30 AM">TTH 8:00-9:30 AM</option>
-										<option value="TTH 9:30-11:00 AM">TTH 9:30-11:00 AM</option>
-										<option value="TTH 1:00-2:30 PM">TTH 1:00-2:30 PM</option>
-										<option value="TTH 2:30-4:00 PM">TTH 2:30-4:00 PM</option>
-									</select>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer border-secondary">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-primary" id="updateCourseBtn">Update</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Admin Course Management Scripts -->
 		<script>
 		$(document).ready(function() {
-			// Status dropdown change handler
-			$('.status-dropdown').on('change', function() {
-				const courseId = $(this).data('course-id');
-				const newStatus = $(this).val();
-				const dropdown = $(this);
-				const originalValue = dropdown.find('option:not(:selected)').val();
-
-				if (confirm('Are you sure you want to change this course status to ' + newStatus + '?')) {
-					$.ajax({
-						url: '<?= base_url('/admin/course/updateStatus') ?>/' + courseId,
-						method: 'POST',
-						data: { status: newStatus },
-						dataType: 'json',
-						success: function(response) {
-							if (response.success) {
-								showAlert(response.message, 'success');
-								updateCourseCounts(newStatus === 'Active' ? 1 : -1);
-							} else {
-								showAlert(response.message || 'Failed to update status', 'danger');
-								dropdown.val(originalValue);
-							}
-						},
-						error: function() {
-							showAlert('An error occurred while updating status', 'danger');
-							dropdown.val(originalValue);
-						}
-					});
-				} else {
-					dropdown.val(originalValue);
-				}
-			});
 
 			// Edit course button handler
 			$('.edit-course-btn').on('click', function() {
@@ -356,15 +146,15 @@
 				const tbody = $('#coursesTableBody');
 				tbody.empty();
 
-				if (courses.length === 0) {
-					tbody.append('<tr><td colspan="10" class="text-center text-muted py-4">No courses found.</td></tr>');
+					if (courses.length === 0) {
+					tbody.append('<tr><td colspan="9" class="text-center text-muted py-4">No courses found.</td></tr>');
 					return;
 				}
 
 				courses.forEach(function(course) {
 					const description = course.description || 'No description';
 					const truncatedDesc = description.length > 60 ? description.substring(0, 60) + '...' : description;
-					
+
 					const row = `
 						<tr data-course-id="${course.id}">
 							<td><span class="badge bg-info">${course.course_code || 'N/A'}</span></td>
@@ -378,12 +168,6 @@
 								<span class="badge bg-success">${course.active_users || '0'}</span>
 							</td>
 							<td>
-								<select class="form-select form-select-sm status-dropdown" data-course-id="${course.id}">
-									<option value="Active" ${course.status === 'Active' ? 'selected' : ''}>Active</option>
-									<option value="Inactive" ${course.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
-								</select>
-							</td>
-							<td>
 								<button class="btn btn-sm btn-outline-light edit-course-btn" data-course-id="${course.id}">
 									<i class="fas fa-edit"></i> Edit
 								</button>
@@ -391,12 +175,6 @@
 						</tr>
 					`;
 					tbody.append(row);
-				});
-
-				// Re-attach event handlers
-				$('.status-dropdown').off('change').on('change', function() {
-					// Re-use the same handler as above
-					location.reload(); // Simple approach for now
 				});
 
 				$('.edit-course-btn').off('click').on('click', function() {
@@ -419,10 +197,7 @@
 				});
 			}
 
-			function updateCourseCounts(delta) {
-				const activeCount = parseInt($('#activeCoursesCount').text()) || 0;
-				$('#activeCoursesCount').text(Math.max(0, activeCount + delta));
-			}
+
 
 			function showAlert(message, type) {
 				const alertHtml = `
@@ -439,6 +214,57 @@
 			}
 		});
 		</script>
+
+		<!-- Manage Courses Section -->
+		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
+			<div class="card-body">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<div>
+				<h5 class="card-title text-white mb-1">Course Materials</h5>
+				<p class="text-muted mb-0 small">View all courses and manage their materials</p>
+					</div>
+				</div>
+
+				<?php if (isset($admin['courses']) && !empty($admin['courses'])): ?>
+					<div class="table-responsive">
+						<table class="table table-dark table-hover align-middle mb-0">
+							<thead class="table-secondary">
+								<tr>
+									<th class="py-3">Title</th>
+									<th class="py-3">Teacher</th>
+									<th class="py-3 text-center">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($admin['courses'] as $course): ?>
+								<tr>
+									<td class="py-3">
+										<strong class="text-white"><?= esc($course['title'] ?? 'Untitled') ?></strong>
+									</td>
+									<td class="py-3">
+										<small class="text-muted"><?= esc($course['teacher_name'] ?? 'Unassigned') ?></small>
+									</td>
+									<td class="py-3 text-center">
+										<a href="<?= base_url('admin/course/' . esc($course['id']) . '/upload') ?>"
+										   class="btn btn-sm btn-primary" title="Upload Materials">
+											<i class="fas fa-upload"></i>
+											<span class="d-none d-md-inline ms-1">Upload Materials</span>
+										</a>
+									</td>
+								</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					</div>
+				<?php else: ?>
+					<div class="text-center text-muted py-5">
+						<i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+						<p>No courses found</p>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+
 	<?php elseif (isset($role) && $role === 'teacher'): ?>
 		<!-- Pending Enrollment Requests -->
 		<?php if (!empty($teacher['pendingRequests'])): ?>
@@ -525,69 +351,8 @@
 			</div>
 		</div>
 
-		<!-- Courses Table -->
-		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
-			<div class="card-body">
-				<div class="d-flex justify-content-between align-items-center mb-3">
-					<div>
-						<h5 class="card-title text-white mb-1">My Courses</h5>
-						<p class="text-muted mb-0 small">List of all courses you are teaching.</p>
-					</div>
-				</div>
-				<div class="table-responsive">
-					<table class="table table-dark table-hover align-middle mb-0">
-						<thead class="table-secondary">
-							<tr>
-								<th class="py-3" style="width: 20%;">Title</th>
-								<th class="py-3" style="width: 40%;">Description</th>
-								<th class="py-3" style="width: 15%;">Created Date</th>
-								<th class="py-3 text-center" style="width: 25%;">Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if (!empty($teacher['courses'])): ?>
-								<?php foreach ($teacher['courses'] as $course): ?>
-								<tr>
-									<td class="py-3">
-										<strong class="text-white"><?= esc($course['title'] ?? 'Untitled') ?></strong>
-									</td>
-									<td class="py-3">
-										<span class="text-muted">
-											<?= esc(substr($course['description'] ?? 'No description', 0, 100)) ?><?= (strlen($course['description'] ?? '') > 100) ? '...' : '' ?>
-										</span>
-									</td>
-									<td class="py-3">
-										<span class="text-muted small">
-											<?= isset($course['created_at']) ? date('Y-m-d h:i:s A', strtotime($course['created_at'])) : 'N/A' ?>
-										</span>
-									</td>
-									<td class="py-3 text-center">
-										<div class="btn-group" role="group">
-											<a href="<?= base_url('admin/course/' . $course['id'] . '/upload') ?>" 
-											   class="btn btn-sm btn-primary">
-												<i class="fas fa-upload"></i> Upload
-											</a>
-											<a href="<?= base_url('assignment/teacher-view/' . $course['id']) ?>" 
-											   class="btn btn-sm btn-success">
-												<i class="fas fa-tasks"></i> Assignments
-											</a>
-										</div>
-									</td>
-								</tr>
-								<?php endforeach; ?>
-							<?php else: ?>
-								<tr>
-									<td colspan="4" class="text-center text-muted py-5">
-										<i class="fas fa-inbox fa-3x mb-3 d-block"></i>
-										No courses found.
-									</td>
-								</tr>
-							<?php endif; ?>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
+
+
 	<?php elseif (isset($role) && $role === 'student'): ?>
 		<!-- Recent Notifications (Enrollment Status Updates) -->
 		<?php
@@ -701,17 +466,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="p-3 bg-secondary rounded">
-							<div class="text-muted">Available Courses</div>
-							<div class="h4 mb-0" id="availableCoursesCount">
-								<?php
-								$availableCourses = $enrollmentModel->getAvailableCourses($user_id);
-								echo count($availableCourses);
-								?>
-							</div>
-						</div>
-					</div>
+
 				</div>
 			</div>
 		</div>
@@ -824,52 +579,7 @@
 			</div>
 		</div>
 
-		<!-- Available Courses Section -->
-		<div class="card shadow-sm border-0 bg-dark text-light mb-4">
-			<div class="card-body">
-				<h5 class="card-title text-white">Available Courses</h5>
-				<p class="mb-3">Courses available for enrollment.</p>
-				<div class="row" id="availableCoursesList">
-					<?php
-					$availableCourses = $enrollmentModel->getAvailableCourses($user_id);
-					if (!empty($availableCourses)):
-						foreach ($availableCourses as $course):
-					?>
-						<div class="col-md-6 mb-3">
-							<div class="card bg-secondary text-light border-0 h-100">
-								<div class="card-body">
-									<h6 class="card-title text-white mb-2">
-										<?= esc($course['title'] ?? 'Untitled Course') ?>
-									</h6>
-									<p class="card-text text-muted mb-3">
-										<?= esc(substr($course['description'] ?? 'No description available', 0, 100)) ?>
-										<?= (strlen($course['description'] ?? '') > 100) ? '...' : '' ?>
-									</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											Instructor ID: <?= esc($course['instructor_id'] ?? 'N/A') ?>
-										</small>
-										<button class="btn btn-primary btn-sm enroll-btn"
-												data-course-id="<?= esc($course['id']) ?>">
-											Enroll
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					<?php
-						endforeach;
-					else:
-					?>
-						<div class="col-12">
-							<div class="text-center text-muted py-4">
-								<p>No courses available for enrollment at the moment.</p>
-							</div>
-						</div>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
+
 	<?php else: ?>
 		<div class="card shadow-sm border-0 bg-dark text-light">
 			<div class="card-body">

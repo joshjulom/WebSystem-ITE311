@@ -308,36 +308,36 @@ class Admin extends Controller
         }
 
         $data = [];
-        
+
         // Get data from POST
         if ($this->request->getPost('title')) {
             $data['title'] = $this->request->getPost('title');
         }
-        
+
         if ($this->request->getPost('description')) {
             $data['description'] = $this->request->getPost('description');
         }
-        
+
         if ($this->request->getPost('school_year')) {
             $data['school_year'] = $this->request->getPost('school_year');
         }
-        
+
         if ($this->request->getPost('semester')) {
             $data['semester'] = $this->request->getPost('semester');
         }
-        
+
         if ($this->request->getPost('start_date')) {
             $data['start_date'] = $this->request->getPost('start_date');
         }
-        
+
         if ($this->request->getPost('end_date')) {
             $data['end_date'] = $this->request->getPost('end_date');
         }
-        
+
         if ($this->request->getPost('instructor_id')) {
             $data['instructor_id'] = $this->request->getPost('instructor_id');
         }
-        
+
         if ($this->request->getPost('schedule')) {
             $data['schedule'] = $this->request->getPost('schedule');
         }
