@@ -58,32 +58,209 @@ class Course extends BaseController
             'course_id' => $course_id
         ];
 
-        $result = $enrollmentModel->enrollUser($enrollmentData);
+        try {
+            $enrollmentId = $enrollmentModel->enrollUser($enrollmentData);
 
-        if ($result) {
-            // Create notification for the user
-            $courseModel = new CourseModel();
-            $course = $courseModel->find($course_id);
-            if ($course) {
-                $notificationModel = new NotificationModel();
-                $notificationModel->insert([
-                    'user_id' => $user_id,
-                    'message' => 'You have been enrolled in ' . $course['title'],
-                    'is_read' => 0,
-                    'created_at' => date('Y-m-d H:i:s')
+            if (!$enrollmentId) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Failed to submit enrollment request. Please try again.'
                 ]);
+            }
+
+            // Enrollment succeeded - now try to send notifications (but don't fail if this part fails)
+            try {
+                $courseModel = new CourseModel();
+                $course = $courseModel->find($course_id);
+                
+                if ($course) {
+                    $notificationModel = new NotificationModel();
+                    $userModel = new \App\Models\UserModel();
+                    $student = $userModel->find($user_id);
+                    
+                    // Check if new columns exist
+                    $db = \Config\Database::connect();
+                    $fields = $db->getFieldNames('notifications');
+                    $hasNewFields = in_array('type', $fields) && in_array('enrollment_id', $fields);
+                    
+                    if ($hasNewFields) {
+                        // Use new format with type and enrollment_id
+                        $notificationModel->insert([
+                            'user_id' => $user_id,
+                            'message' => 'Your enrollment request for "' . $course['title'] . '" is pending approval',
+                            'type' => 'enrollment',
+                            'enrollment_id' => $enrollmentId,
+                            'is_read' => 0,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+                        if (!empty($course['instructor_id'])) {
+                            $notificationModel->insert([
+                                'user_id' => $course['instructor_id'],
+                                'message' => ($student['name'] ?? 'A student') . ' has requested to enroll in "' . $course['title'] . '"',
+                                'type' => 'enrollment',
+                                'enrollment_id' => $enrollmentId,
+                                'is_read' => 0,
+                                'created_at' => date('Y-m-d H:i:s')
+                            ]);
+                        }
+                    } else {
+                        // Use legacy format without new columns
+                        $notificationModel->insert([
+                            'user_id' => $user_id,
+                            'message' => 'Your enrollment request for "' . $course['title'] . '" is pending approval',
+                            'is_read' => 0,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+                        if (!empty($course['instructor_id'])) {
+                            $notificationModel->insert([
+                                'user_id' => $course['instructor_id'],
+                                'message' => ($student['name'] ?? 'A student') . ' has requested to enroll in "' . $course['title'] . '"',
+                                'is_read' => 0,
+                                'created_at' => date('Y-m-d H:i:s')
+                            ]);
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                // Log the error but don't fail the enrollment
+                log_message('error', 'Notification creation failed: ' . $e->getMessage());
+                // Continue - enrollment succeeded even if notification failed
             }
 
             return $this->response->setJSON([
                 'success' => true,
-                'message' => 'Successfully enrolled in the course!'
+                'message' => 'Enrollment request submitted! Waiting for teacher approval.'
             ]);
-        } else {
+            
+        } catch (\Exception $e) {
+            log_message('error', 'Enrollment error: ' . $e->getMessage());
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Failed to enroll in the course. Please try again.'
+                'message' => 'An error occurred during enrollment: ' . $e->getMessage()
             ]);
         }
+    }
+    
+    /**
+     * Approve enrollment request (Teacher/Admin only)
+     */
+    public function approveEnrollment($enrollment_id)
+    {
+        if (!session('isLoggedIn') || !in_array(session('role'), ['teacher', 'admin'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Unauthorized access'
+            ]);
+        }
+        
+        $enrollmentModel = new EnrollmentModel();
+        $enrollment = $enrollmentModel->find($enrollment_id);
+        
+        if (!$enrollment) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Enrollment request not found'
+            ]);
+        }
+        
+        // Verify teacher owns this course
+        if (session('role') === 'teacher') {
+            $courseModel = new CourseModel();
+            $course = $courseModel->find($enrollment['course_id']);
+            
+            if ($course['instructor_id'] != session('user_id')) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'You do not have permission to approve this enrollment'
+                ]);
+            }
+        }
+        
+        if ($enrollmentModel->approveEnrollment($enrollment_id)) {
+            // Notify student
+            $courseModel = new CourseModel();
+            $course = $courseModel->find($enrollment['course_id']);
+            
+            $notificationModel = new NotificationModel();
+            $notificationModel->insert([
+                'user_id' => $enrollment['user_id'],
+                'message' => 'Your enrollment in "' . ($course['title'] ?? 'the course') . '" has been approved!',
+                'is_read' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Enrollment approved successfully'
+            ]);
+        }
+        
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Failed to approve enrollment'
+        ]);
+    }
+    
+    /**
+     * Reject enrollment request (Teacher/Admin only)
+     */
+    public function rejectEnrollment($enrollment_id)
+    {
+        if (!session('isLoggedIn') || !in_array(session('role'), ['teacher', 'admin'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Unauthorized access'
+            ]);
+        }
+        
+        $enrollmentModel = new EnrollmentModel();
+        $enrollment = $enrollmentModel->find($enrollment_id);
+        
+        if (!$enrollment) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Enrollment request not found'
+            ]);
+        }
+        
+        // Verify teacher owns this course
+        if (session('role') === 'teacher') {
+            $courseModel = new CourseModel();
+            $course = $courseModel->find($enrollment['course_id']);
+            
+            if ($course['instructor_id'] != session('user_id')) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'You do not have permission to reject this enrollment'
+                ]);
+            }
+        }
+        
+        if ($enrollmentModel->rejectEnrollment($enrollment_id)) {
+            // Notify student
+            $courseModel = new CourseModel();
+            $course = $courseModel->find($enrollment['course_id']);
+            
+            $notificationModel = new NotificationModel();
+            $notificationModel->insert([
+                'user_id' => $enrollment['user_id'],
+                'message' => 'Your enrollment request for "' . ($course['title'] ?? 'the course') . '" was declined',
+                'is_read' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Enrollment request rejected'
+            ]);
+        }
+        
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Failed to reject enrollment'
+        ]);
     }
 
     /**
@@ -92,23 +269,58 @@ class Course extends BaseController
     public function index()
     {
         $courseModel = new CourseModel();
-        $data['courses'] = $courseModel->findAll();
+        $enrollmentModel = new EnrollmentModel();
+        
+        // Get courses with teacher information
+        $data['courses'] = $courseModel->getCoursesWithTeachers();
+        
+        // If user is teacher/admin, get enrollment counts for each course
+        if (session()->has('user_id') && in_array(session()->get('role'), ['admin', 'teacher'])) {
+            $enrollmentCounts = [];
+            foreach ($data['courses'] as $course) {
+                $enrollmentCounts[$course['id']] = [
+                    'approved' => $enrollmentModel->getEnrollmentCount($course['id'], 'approved'),
+                    'pending' => $enrollmentModel->getEnrollmentCount($course['id'], 'pending')
+                ];
+            }
+            $data['enrollmentCounts'] = $enrollmentCounts;
+        }
 
         return view('courses/index', $data);
     }
 
     /**
-     * Show specific course details (optional method)
+     * Show specific course details with enrolled students (Teacher/Admin only)
      */
     public function show($id)
     {
-        $courseModel = new CourseModel();
+        // Check if user is logged in and is teacher/admin
+        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+            return redirect()->to('/course')->with('error', 'Access denied. Only teachers and admins can view enrollment details.');
+        }
 
-        if (!$courseModel->find($id)) {
+        $courseModel = new CourseModel();
+        $enrollmentModel = new EnrollmentModel();
+
+        $course = $courseModel->find($id);
+        
+        if (!$course) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Course not found');
         }
 
-        $data['course'] = $courseModel->find($id);
+        // For teachers, verify they own this course
+        if (session()->get('role') === 'teacher' && $course['instructor_id'] != session()->get('user_id')) {
+            return redirect()->to('/course')->with('error', 'You can only view enrollment details for your own courses.');
+        }
+
+        $data['course'] = $course;
+        $data['enrolledStudents'] = $enrollmentModel->getEnrolledStudents($id);
+        $data['pendingRequests'] = $enrollmentModel->select('enrollments.*, users.name as student_name, users.email as student_email')
+                                                    ->join('users', 'users.id = enrollments.user_id')
+                                                    ->where('enrollments.course_id', $id)
+                                                    ->where('enrollments.status', 'pending')
+                                                    ->findAll();
+        
         return view('courses/show', $data);
     }
 
@@ -182,6 +394,13 @@ class Course extends BaseController
         $data = [
             'title' => $this->request->getPost('title'),
             'description' => $this->request->getPost('description'),
+            'course_code' => $this->request->getPost('course_code'),
+            'school_year' => $this->request->getPost('school_year'),
+            'semester' => $this->request->getPost('semester'),
+            'schedule' => $this->request->getPost('schedule'),
+            'start_date' => $this->request->getPost('start_date'),
+            'end_date' => $this->request->getPost('end_date'),
+            'status' => $this->request->getPost('status') ?: 'Active',
             'instructor_id' => session()->get('user_id')
         ];
 
@@ -240,7 +459,14 @@ class Course extends BaseController
 
         $data = [
             'title' => $this->request->getPost('title'),
-            'description' => $this->request->getPost('description')
+            'description' => $this->request->getPost('description'),
+            'course_code' => $this->request->getPost('course_code'),
+            'school_year' => $this->request->getPost('school_year'),
+            'semester' => $this->request->getPost('semester'),
+            'schedule' => $this->request->getPost('schedule'),
+            'start_date' => $this->request->getPost('start_date'),
+            'end_date' => $this->request->getPost('end_date'),
+            'status' => $this->request->getPost('status') ?: 'Active'
         ];
 
         if ($courseModel->update($id, $data)) {
@@ -271,6 +497,57 @@ class Course extends BaseController
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete course']);
         }
+    }
+    
+    /**
+     * Remove rejected enrollment (Student only)
+     */
+    public function removeRejectedEnrollment($enrollment_id)
+    {
+        if (!session('isLoggedIn') || session('role') !== 'student') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Unauthorized access'
+            ]);
+        }
+        
+        $enrollmentModel = new EnrollmentModel();
+        $enrollment = $enrollmentModel->find($enrollment_id);
+        
+        if (!$enrollment) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Enrollment not found'
+            ]);
+        }
+        
+        // Verify the enrollment belongs to the current user
+        if ($enrollment['user_id'] != session('user_id')) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'You do not have permission to remove this enrollment'
+            ]);
+        }
+        
+        // Verify the enrollment is rejected
+        if ($enrollment['status'] !== 'rejected') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Only rejected enrollments can be removed'
+            ]);
+        }
+        
+        if ($enrollmentModel->cleanupRejectedEnrollment($enrollment_id)) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Rejected enrollment removed successfully'
+            ]);
+        }
+        
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Failed to remove enrollment'
+        ]);
     }
 
 

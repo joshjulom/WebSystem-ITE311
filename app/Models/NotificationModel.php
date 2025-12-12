@@ -15,12 +15,17 @@ class NotificationModel extends Model
     protected $allowedFields = [
         'user_id',
         'message',
+        'type',
+        'enrollment_id',
         'is_read',
         'created_at'
     ];
 
     // Dates
     protected $useTimestamps = false;
+    protected $dateFormat = 'datetime';
+    protected $createdField = 'created_at';
+    protected $updatedField = '';  // No updated_at field
 
     protected $skipValidation = false;
 

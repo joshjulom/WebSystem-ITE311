@@ -15,7 +15,12 @@ class AnnouncementModel extends Model
     protected $allowedFields = [
         'title',
         'content',
-        'created_at'
+        'target_audience',
+        'priority',
+        'created_by',
+        'created_at',
+        'expires_at',
+        'is_active'
     ];
 
     // Dates
@@ -25,7 +30,9 @@ class AnnouncementModel extends Model
     // Validation
     protected $validationRules = [
         'title' => 'required|min_length[3]|max_length[255]',
-        'content' => 'required|min_length[10]'
+        'content' => 'required|min_length[10]',
+        'target_audience' => 'permit_empty|in_list[all,admin,teacher,student]',
+        'priority' => 'permit_empty|in_list[low,normal,high,urgent]'
     ];
 
     protected $validationMessages = [
@@ -54,5 +61,56 @@ class AnnouncementModel extends Model
             $data['data']['created_at'] = date('Y-m-d H:i:s');
         }
         return $data;
+    }
+
+    /**
+     * Get active announcements for a specific audience
+     */
+    public function getActiveAnnouncementsFor($audience = 'all', $limit = 5)
+    {
+        $builder = $this->where('is_active', 1);
+        
+        // Filter by target audience
+        if ($audience !== 'all') {
+            $builder->groupStart()
+                   ->where('target_audience', $audience)
+                   ->orWhere('target_audience', 'all')
+                   ->groupEnd();
+        }
+        
+        // Filter out expired announcements
+        $builder->groupStart()
+               ->where('expires_at IS NULL')
+               ->orWhere('expires_at >', date('Y-m-d H:i:s'))
+               ->groupEnd();
+        
+        return $builder->orderBy('priority', 'DESC')
+                      ->orderBy('created_at', 'DESC')
+                      ->limit($limit)
+                      ->find();
+    }
+
+    /**
+     * Get all announcements with creator info (for admin management)
+     */
+    public function getAllWithCreator()
+    {
+        return $this->select('announcements.*, users.name as creator_name')
+                    ->join('users', 'users.id = announcements.created_by', 'left')
+                    ->orderBy('announcements.created_at', 'DESC')
+                    ->findAll();
+    }
+
+    /**
+     * Toggle announcement active status
+     */
+    public function toggleActive($id)
+    {
+        $announcement = $this->find($id);
+        if ($announcement) {
+            $newStatus = $announcement['is_active'] == 1 ? 0 : 1;
+            return $this->update($id, ['is_active' => $newStatus]);
+        }
+        return false;
     }
 }

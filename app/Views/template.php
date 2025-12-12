@@ -6,6 +6,8 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -101,6 +103,196 @@
 
         .navbar-toggler:focus {
             box-shadow: none;
+        }
+
+        /* Navbar Spacing & Layout */
+        .navbar {
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-right: 2rem;
+        }
+
+        .navbar-nav {
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link.active {
+            background-color: rgba(88, 101, 242, 0.2);
+            font-weight: 500;
+        }
+
+        .nav-link i {
+            font-size: 0.9rem;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Badge Styling */
+        .nav-link .badge {
+            font-size: 0.7rem;
+            padding: 0.25em 0.5em;
+            margin-left: 0.25rem;
+            vertical-align: middle;
+        }
+
+        /* Dropdown Menus */
+        .dropdown-menu {
+            background-color: #2c2f33;
+            border: 1px solid #404449;
+            min-width: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Larger width for notification dropdown */
+        #notificationList {
+            min-width: 300px;
+        }
+
+        .dropdown-item {
+            color: #dcddde;
+            padding: 0.75rem 1rem;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-item:hover {
+            background-color: #36393f;
+            color: #ffffff;
+        }
+
+        .dropdown-divider {
+            border-color: #404449;
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive spacing */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                margin-top: 1rem;
+                gap: 0.25rem;
+            }
+            
+            .nav-link {
+                padding: 0.75rem 1rem !important;
+            }
+        }
+
+        /* Table Styling */
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #404449;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .table tbody td {
+            vertical-align: middle;
+            border-top: 1px solid #404449;
+        }
+
+        .table .btn-group {
+            gap: 0.25rem;
+        }
+
+        .table .btn-group .btn {
+            white-space: nowrap;
+        }
+
+        /* Card Improvements */
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Input Group Styling */
+        .input-group-text {
+            background-color: #2c2f33;
+            border: 1px solid #2f3136;
+            color: #b9bbbe;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+        }
+
+        .input-group .form-control:focus {
+            border-left: none;
+            box-shadow: none;
+        }
+
+        /* Button spacing in tables */
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+
+        .btn i {
+            margin-right: 0.35rem;
+        }
+
+        /* Empty state styling */
+        .text-center i.fa-inbox {
+            opacity: 0.3;
         }
     </style>
 </head>

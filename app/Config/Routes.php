@@ -26,8 +26,12 @@ $routes->post('/course/search', 'Course::search');
 
 // Course enrollment route
 $routes->post('/course/enroll', 'Course::enroll');
+$routes->post('/course/approve-enrollment/(:num)', 'Course::approveEnrollment/$1');
+$routes->post('/course/reject-enrollment/(:num)', 'Course::rejectEnrollment/$1');
+$routes->post('/course/remove-rejected-enrollment/(:num)', 'Course::removeRejectedEnrollment/$1');
 
 // Course management routes (admin/teacher only)
+$routes->get('/course/show/(:num)', 'Course::show/$1');
 $routes->get('/course/create', 'Course::create');
 $routes->post('/course/store', 'Course::store');
 $routes->get('/course/edit/(:num)', 'Course::edit/$1');
@@ -52,3 +56,36 @@ $routes->post('/admin/addUser', 'Admin::addUser');
 $routes->post('/admin/updateUser/(:num)', 'Admin::updateUser/$1');
 $routes->post('/admin/changePassword/(:num)', 'Admin::changePassword/$1');
 $routes->post('/admin/toggleStatus/(:num)', 'Admin::toggleStatus/$1');
+
+// Admin Course Management Routes
+$routes->get('/admin/course/search', 'Admin::courseSearch');
+$routes->post('/admin/course/updateStatus/(:num)', 'Admin::updateCourseStatus/$1');
+$routes->post('/admin/course/updateDetails/(:num)', 'Admin::updateCourseDetails/$1');
+
+// Assignment Routes
+// Teacher Routes
+$routes->get('/assignment/teacher-view/(:num)', 'Assignment::teacherView/$1');
+$routes->get('/assignment/create/(:num)', 'Assignment::create/$1');
+$routes->post('/assignment/store', 'Assignment::store');
+$routes->get('/assignment/view-submissions/(:num)', 'Assignment::viewSubmissions/$1');
+$routes->post('/assignment/grade', 'Assignment::grade');
+$routes->post('/assignment/delete/(:num)', 'Assignment::delete/$1');
+
+// Student Routes
+$routes->get('/assignment/student-view/(:num)', 'Assignment::studentView/$1');
+$routes->get('/assignment/submit-form/(:num)', 'Assignment::submitForm/$1');
+$routes->post('/assignment/submit', 'Assignment::submit');
+
+// Download Routes (both teacher and student)
+$routes->get('/assignment/download-assignment/(:num)', 'Assignment::downloadAssignment/$1');
+$routes->get('/assignment/download-submission/(:num)', 'Assignment::downloadSubmission/$1');
+
+// Announcement Routes
+$routes->get('/announcements', 'Announcement::index');
+$routes->get('/announcement/manage', 'Announcement::manage');
+$routes->get('/announcement/create', 'Announcement::create');
+$routes->post('/announcement/store', 'Announcement::store');
+$routes->get('/announcement/edit/(:num)', 'Announcement::edit/$1');
+$routes->post('/announcement/update/(:num)', 'Announcement::update/$1');
+$routes->post('/announcement/toggle-status/(:num)', 'Announcement::toggleStatus/$1');
+$routes->post('/announcement/delete/(:num)', 'Announcement::delete/$1');

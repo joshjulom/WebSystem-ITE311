@@ -207,16 +207,36 @@ class Auth extends Controller
 		// Load role-specific data (admin)
 		if ($role === 'admin') {
 			try {
-				$loginLogModel = new LoginLogModel();
+				$db = \Config\Database::connect();
+				$courseModelForAdmin = new CourseModel();
+				$userModelForTeachers = new UserModel();
+				
+				// Check if status column exists
+				$statusExists = $db->fieldExists('status', 'courses');
+				
+				// Get total courses
+				$totalCourses = $courseModelForAdmin->countAllResults();
+				
+				// Get active courses (only if status column exists)
+				if ($statusExists) {
+					$activeCourses = $courseModelForAdmin->where('status', 'Active')->countAllResults();
+				} else {
+					$activeCourses = $totalCourses; // All courses are considered active if no status column
+				}
+				
+				// Get all courses with teacher names and enrollment counts
+				$courses = $courseModelForAdmin->getCoursesWithTeachersAndEnrollments();
+				
 				$adminData = [
 					'totalUsers' => model(UserModel::class)->countAllResults(),
 					'latestUsers' => model(UserModel::class)
 						->orderBy('created_at', 'DESC')
 						->limit(5)
 						->find(),
-					'recentLogins' => $loginLogModel->getRecentLogins(10),
-					'loginStatsByRole' => $loginLogModel->getLoginStatsByRole(7),
-					'recentUniqueUsers' => $loginLogModel->getRecentUniqueUsers(7, 10),
+					'totalCourses' => $totalCourses,
+					'activeCourses' => $activeCourses,
+					'courses' => $courses,
+					'teachers' => $userModelForTeachers->where('role', 'teacher')->findAll(),
 				];
 			} catch (\Exception $e) {
 				log_message('error', 'Error loading admin dashboard data: ' . $e->getMessage());
@@ -226,9 +246,10 @@ class Auth extends Controller
 						->orderBy('created_at', 'DESC')
 						->limit(5)
 						->find(),
-					'recentLogins' => [],
-					'loginStatsByRole' => [],
-					'recentUniqueUsers' => [],
+					'totalCourses' => 0,
+					'activeCourses' => 0,
+					'courses' => [],
+					'teachers' => [],
 				];
 			}
 		}
@@ -237,13 +258,14 @@ class Auth extends Controller
 		if ($role === 'teacher') {
 			$db = \Config\Database::connect();
 			$courseModel = new CourseModel();
+			$enrollmentModel = new \App\Models\EnrollmentModel();
 			$userId = (int) $session->get('user_id');
 			$totalCourses = $courseModel->where('instructor_id', $userId)->countAllResults();
 			$totalStudents = (int) $db->query(
 				"SELECT COUNT(DISTINCT e.user_id) AS cnt
 				 FROM enrollments e
 				 JOIN courses c ON c.id = e.course_id
-				 WHERE c.instructor_id = ?",
+				 WHERE c.instructor_id = ? AND e.status = 'approved'",
 				[$userId]
 			)->getRow('cnt');
 			$recentEnrollments = $db->query(
@@ -251,16 +273,24 @@ class Auth extends Controller
 				 FROM enrollments e
 				 JOIN users u ON u.id = e.user_id
 				 JOIN courses c ON c.id = e.course_id
-				 WHERE c.instructor_id = ?
+				 WHERE c.instructor_id = ? AND e.status = 'approved'
 				 ORDER BY e.enrollment_date DESC
 				 LIMIT 5",
 				[$userId]
 			)->getResultArray();
-    $courses = $courseModel->where('instructor_id', $userId)->findAll();
-    $teacherData = [
+			$pendingRequests = $enrollmentModel->getPendingRequestsForTeacher($userId);
+			
+			// Debug: Log pending requests
+			log_message('info', 'Teacher ID: ' . $userId);
+			log_message('info', 'Pending Requests Count: ' . count($pendingRequests));
+			log_message('info', 'Pending Requests: ' . print_r($pendingRequests, true));
+			
+			$courses = $courseModel->where('instructor_id', $userId)->findAll();
+			$teacherData = [
 				'totalCourses' => $totalCourses,
 				'totalStudents' => $totalStudents,
 				'recentEnrollments' => $recentEnrollments,
+				'pendingRequests' => $pendingRequests,
 				'courses' => $courses,
 			];
 		}

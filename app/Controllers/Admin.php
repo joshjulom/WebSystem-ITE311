@@ -37,13 +37,8 @@ class Admin extends Controller
             return redirect()->to('login');
         }
 
-        $data = [
-            'user_name' => $session->get('user_name'),
-            'user_email' => $session->get('user_email'),
-            'role' => $session->get('role')
-        ];
-
-        return view('admin_dashboard', $data);
+        // Redirect to the main dashboard which handles all roles including admin
+        return redirect()->to('/dashboard');
     }
 
     public function users()
@@ -226,6 +221,136 @@ class Admin extends Controller
             return $this->response->setJSON(['success' => true, 'message' => 'Password changed successfully']);
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'Failed to change password']);
+        }
+    }
+
+    /**
+     * Search courses with enrollment counts
+     */
+    public function courseSearch()
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn') || $session->get('role') !== 'admin') {
+            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
+        }
+
+        $searchTerm = $this->request->getGet('search') ?? '';
+        $courseModel = new \App\Models\CourseModel();
+
+        if (!empty($searchTerm)) {
+            // Search with enrollment counts
+            $courses = $courseModel->select('courses.*, users.name as teacher_name, COUNT(DISTINCT enrollments.user_id) as active_users')
+                                   ->join('users', 'users.id = courses.instructor_id', 'left')
+                                   ->join('enrollments', 'enrollments.course_id = courses.id', 'left')
+                                   ->groupStart()
+                                       ->like('courses.title', $searchTerm)
+                                       ->orLike('courses.course_code', $searchTerm)
+                                       ->orLike('users.name', $searchTerm)
+                                   ->groupEnd()
+                                   ->groupBy('courses.id')
+                                   ->findAll();
+        } else {
+            // Get all courses with enrollment counts
+            $courses = $courseModel->getCoursesWithTeachersAndEnrollments();
+        }
+
+        return $this->response->setJSON(['success' => true, 'courses' => $courses]);
+    }
+
+    /**
+     * Update course status
+     */
+    public function updateCourseStatus($id)
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn') || $session->get('role') !== 'admin') {
+            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
+        }
+
+        $status = $this->request->getPost('status');
+
+        if (!$status || !in_array($status, ['Active', 'Inactive'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Invalid status']);
+        }
+
+        $courseModel = new \App\Models\CourseModel();
+        $course = $courseModel->find($id);
+
+        if (!$course) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Course not found']);
+        }
+
+        if ($courseModel->update($id, ['status' => $status])) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Course status updated successfully']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to update course status']);
+        }
+    }
+
+    /**
+     * Update course details
+     */
+    public function updateCourseDetails($id)
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn') || $session->get('role') !== 'admin') {
+            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
+        }
+
+        $courseModel = new \App\Models\CourseModel();
+        $course = $courseModel->find($id);
+
+        if (!$course) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Course not found']);
+        }
+
+        $data = [];
+        
+        // Get data from POST
+        if ($this->request->getPost('title')) {
+            $data['title'] = $this->request->getPost('title');
+        }
+        
+        if ($this->request->getPost('description')) {
+            $data['description'] = $this->request->getPost('description');
+        }
+        
+        if ($this->request->getPost('school_year')) {
+            $data['school_year'] = $this->request->getPost('school_year');
+        }
+        
+        if ($this->request->getPost('semester')) {
+            $data['semester'] = $this->request->getPost('semester');
+        }
+        
+        if ($this->request->getPost('start_date')) {
+            $data['start_date'] = $this->request->getPost('start_date');
+        }
+        
+        if ($this->request->getPost('end_date')) {
+            $data['end_date'] = $this->request->getPost('end_date');
+        }
+        
+        if ($this->request->getPost('instructor_id')) {
+            $data['instructor_id'] = $this->request->getPost('instructor_id');
+        }
+        
+        if ($this->request->getPost('schedule')) {
+            $data['schedule'] = $this->request->getPost('schedule');
+        }
+
+        // Basic validation
+        if (empty($data['title']) || empty($data['description'])) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Title and description are required']);
+        }
+
+        if ($courseModel->update($id, $data)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'Course updated successfully']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to update course']);
         }
     }
 }
