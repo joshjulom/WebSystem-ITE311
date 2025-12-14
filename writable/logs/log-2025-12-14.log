@@ -14089,3 +14089,767 @@ Stack trace:
 #14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 #15 {main}
 ERROR - 2025-12-14 10:50:10 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 12:31:30 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 12:31:30 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 12:58:56 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 12:58:56 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+DEBUG - 2025-12-14 13:01:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-12-14 13:12:37 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 13:12:37 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 13:12:55 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 13:12:55 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 13:55:25 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 13:55:25 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+DEBUG - 2025-12-14 13:56:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-12-14 13:56:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-12-14 13:57:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-12-14 14:17:17 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 14:17:17 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 14:47:56 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 14:47:56 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 15:03:17 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 15:03:17 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 15:25:06 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 15:25:06 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 15:25:24 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 15:25:24 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:05:32 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:05:32 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:05:55 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:05:55 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:07:01 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:07:01 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:09:28 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:09:28 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:14:45 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:14:45 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:15:05 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:15:05 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:15:56 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:15:56 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:18:15 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:18:15 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:18:27 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:18:27 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:18:43 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:18:43 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:19:15 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:19:15 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:25:31 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:25:31 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:25:50 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:25:50 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:26:42 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:26:42 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:28:44 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:28:44 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:29:04 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:29:04 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:30:50 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:30:50 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:35:02 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:35:02 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:35:23 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:35:23 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:40:13 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:40:13 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:40:25 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:40:25 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:44:37 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:44:37 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:44:48 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:44:48 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:46:59 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:46:59 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:47:08 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:47:08 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:47:20 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:47:20 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:47:50 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(1, 'Admin User', 'admin@example.c...', 'admin')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:47:50 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:48:15 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:48:15 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:50:42 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(3, 'Student User', 'student@example...', 'student')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:50:42 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist
+ERROR - 2025-12-14 16:50:54 --> mysqli_sql_exception: Table 'lms_julom.login_logs' doesn't exist in C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\ITE311-JULOM\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `lo...', 0)
+#1 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `lo...')
+#2 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `lo...')
+#3 C:\xampp\htdocs\ITE311-JULOM\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `lo...', Array, false)
+#4 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\ITE311-JULOM\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\ITE311-JULOM\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\ITE311-JULOM\app\Models\LoginLogModel.php(34): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\ITE311-JULOM\app\Controllers\auth.php(159): App\Models\LoginLogModel->logLogin(2, 'Instructor User', 'instructor@exam...', 'teacher')
+#9 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(933): App\Controllers\Auth->login()
+#10 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#11 C:\xampp\htdocs\ITE311-JULOM\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\ITE311-JULOM\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\ITE311-JULOM\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+ERROR - 2025-12-14 16:50:54 --> Failed to log login event: Table 'lms_julom.login_logs' doesn't exist

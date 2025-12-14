@@ -115,7 +115,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($enrolledStudents as $enrollment): ?>
-                                        <tr data-enrollment-id="<?= esc($enrollment['id']) ?>">
+                                        <tr data-enrollment-id="<?= esc($enrollment['id']) ?>" data-user-id="<?= esc($enrollment['user_id']) ?>">
                                             <td class="py-3">
                                                 <div class="d-flex align-items-center">
                                                     <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
@@ -142,11 +142,19 @@
                                                 </span>
                                             </td>
                                             <td class="py-3 text-center">
-                                                <button class="btn btn-sm btn-outline-danger remove-student-btn"
-                                                        data-enrollment-id="<?= esc($enrollment['id']) ?>"
-                                                        data-student-name="<?= esc($enrollment['student_name']) ?>">
-                                                    <i class="fas fa-user-minus"></i> Remove
-                                                </button>
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <!-- Enroll button (disabled for already enrolled rows) -->
+                                                    <button class="btn btn-sm btn-success enroll-btn" data-user-id="<?= esc($enrollment['user_id']) ?>" <?= 'disabled' ?> title="Already enrolled">
+                                                        <i class="fas fa-user-check"></i> Enroll
+                                                    </button>
+
+                                                    <!-- Unenroll button -->
+                                                    <button class="btn btn-sm btn-outline-danger remove-student-btn"
+                                                            data-enrollment-id="<?= esc($enrollment['id']) ?>"
+                                                            data-student-name="<?= esc($enrollment['student_name']) ?>">
+                                                        <i class="fas fa-user-minus"></i> Unenroll
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -209,42 +217,60 @@
                     <?php endif; ?>
                 </div>
             </div>
+            
+            <!-- Teacher-unenrolled (Admin review) -->
+            <?php if (!empty($teacherUnenrolled ?? [])): ?>
+            <div class="card shadow-sm border-0 bg-dark text-light mt-4">
+                <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-times text-danger"></i>
+                        Teacher Unenrolled (Admin Review)
+                    </h5>
+                    <span class="badge bg-danger">
+                        <?= count($teacherUnenrolled) ?> waiting
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Email</th>
+                                    <th>Unenrolled On</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($teacherUnenrolled as $t): ?>
+                                <tr>
+                                    <td><?= esc($t['student_name']) ?></td>
+                                    <td><?= esc($t['student_email']) ?></td>
+                                    <td><?= date('M d, Y', strtotime($t['enrollment_date'])) ?></td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button class="btn btn-sm btn-success approve-enrollment-btn" data-enrollment-id="<?= esc($t['id']) ?>">
+                                                <i class="fas fa-user-check"></i> Enroll back
+                                            </button>
+                                            <button class="btn btn-sm btn-danger remove-student-btn" data-enrollment-id="<?= esc($t['id']) ?>">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
 
         <!-- Add Students Section -->
         <div class="col-md-4">
-            <div class="card shadow-sm border-0 bg-dark text-light">
-                <div class="card-header border-secondary">
-                    <h6 class="card-title mb-0">
-                        <i class="fas fa-user-plus text-primary"></i>
-                        Add Students
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <form id="addStudentForm">
-                        <div class="mb-3">
-                            <label for="student_id" class="form-label small">
-                                <i class="fas fa-users"></i>
-                                Select Student
-                            </label>
-                            <select id="student_id" class="form-select form-select-sm bg-secondary text-light border-secondary">
-                                <option value="">Choose student...</option>
-                                <?php foreach ($allStudents ?? [] as $student): ?>
-                                    <option value="<?= esc($student['id']) ?>">
-                                        <?= esc($student['name']) ?> (<?= esc($student['email']) ?>)
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-sm w-100" id="addStudentBtn">
-                            <i class="fas fa-plus"></i> Add to Course
-                        </button>
-                    </form>
-                </div>
-            </div>
-
             <!-- Quick Stats -->
-            <div class="card shadow-sm border-0 bg-dark text-light mt-4">
+            <div class="card shadow-sm border-0 bg-dark text-light">
                 <div class="card-header border-secondary">
                     <h6 class="card-title mb-0">
                         <i class="fas fa-chart-bar text-info"></i>
@@ -283,30 +309,109 @@ $(document).ready(function() {
         const studentName = $(this).data('student-name');
         const button = $(this);
         const row = button.closest('tr');
+        const userId = row.data('user-id');
 
-        if (confirm(`Are you sure you want to remove "${studentName}" from this course? This will cancel their enrollment.`)) {
-            $.ajax({
-                url: '<?= base_url('/course/remove-student/') ?>' + enrollmentId,
-                method: 'POST',
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.message);
-                        row.fadeOut(300, function() {
-                            $(this).remove();
-                            // Update stats
-                            updateEnrollmentStats();
-                        });
-                    } else {
-                        alert(response.message);
-                    }
-                },
-                error: function() {
-                    alert('Error removing student from course.');
-                }
-            });
+        if (!confirm(`Are you sure you want to unenroll "${studentName}" from this course?`)) {
+            return;
         }
+
+        $.ajax({
+            url: '<?= base_url('/course/remove-student/') ?>' + enrollmentId,
+            method: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Don't remove the row immediately. Visually mark as unenrolled and show inline actions in the Actions cell.
+                    row.addClass('table-secondary text-muted');
+                    const actionsCell = row.find('td').last();
+                    const inlineHtml = `
+                        <div class="d-flex align-items-center gap-2">
+                            <small class="text-muted">Unenrolled</small>
+                            <button class="btn btn-sm btn-success enroll-back-inline" data-user-id="${userId}">Enroll back</button>
+                            <button class="btn btn-sm btn-danger delete-user-inline" data-user-id="${userId}">Delete user</button>
+                        </div>
+                    `;
+                    actionsCell.html(inlineHtml);
+
+                    // Wire up inline buttons
+                    actionsCell.find('.enroll-back-inline').on('click', function() {
+                        const uid = $(this).data('user-id');
+                        if (!confirm('Re-enroll this student into the course?')) return;
+                        $.ajax({
+                            url: '<?= base_url('/course/enroll') ?>',
+                            method: 'POST',
+                            data: { course_id: <?= $course['id'] ?>, user_id: uid },
+                            dataType: 'json',
+                            success: function(res) {
+                                if (res.success) {
+                                    alert(res.message);
+                                    location.reload();
+                                } else {
+                                    alert(res.message);
+                                }
+                            },
+                            error: function() { alert('Error re-enrolling student.'); }
+                        });
+                    });
+
+                    actionsCell.find('.delete-user-inline').on('click', function() {
+                        const uid = $(this).data('user-id');
+                        if (!confirm('This will permanently delete the user. Continue?')) return;
+                        $.ajax({
+                            url: '<?= base_url('/admin/deleteUser/') ?>' + uid,
+                            method: 'POST',
+                            dataType: 'json',
+                            success: function(res) {
+                                if (res.success) {
+                                    alert(res.message);
+                                    // Remove the row from the table
+                                    row.fadeOut(300, function() { $(this).remove(); updateEnrollmentStats(); });
+                                } else {
+                                    alert(res.message);
+                                }
+                            },
+                            error: function() { alert('Error deleting user.'); }
+                        });
+                    });
+
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert('Error unenrolling student from course.');
+            }
+        });
     });
+
+    // Enroll button (for convenience) - will work for users not currently enrolled.
+    $('.enroll-btn').on('click', function() {
+        const userId = $(this).data('user-id');
+        const button = $(this);
+
+        // If disabled, do nothing
+        if (button.is(':disabled')) return;
+
+        if (!confirm('Enroll this student into the course?')) return;
+
+        $.ajax({
+            url: '<?= base_url('/course/enroll') ?>',
+            method: 'POST',
+            data: { course_id: <?= $course['id'] ?>, user_id: userId },
+            dataType: 'json',
+            success: function(res) {
+                if (res.success) {
+                    alert(res.message);
+                    location.reload();
+                } else {
+                    alert(res.message);
+                }
+            },
+            error: function() { alert('Error enrolling student.'); }
+        });
+    });
+
+        // No modal: inline actions are shown in the Actions cell after unenroll.
 
     // Approve enrollment request
     $('.approve-enrollment-btn').on('click', function() {

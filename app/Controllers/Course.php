@@ -41,20 +41,32 @@ class Course extends BaseController
             ]);
         }
 
+        // Determine which user is being enrolled. By default it's the current session user.
+        // Admins/teachers may pass a 'user_id' POST param to enroll another user.
+        $requested_user_id = $this->request->getPost('user_id');
         $user_id = session('user_id');
+
+        // Only admins may enroll another user via POST (teachers cannot enroll other users)
+        if (!empty($requested_user_id) && session('role') === 'admin') {
+            // Use the provided user id as the target (ensure it's integer)
+            $target_user_id = (int) $requested_user_id;
+        } else {
+            $target_user_id = $user_id;
+        }
+
         $enrollmentModel = new EnrollmentModel();
 
-        // Check if user is already enrolled
-        if ($enrollmentModel->isAlreadyEnrolled($user_id, $course_id)) {
+        // Check if target user is already enrolled
+        if ($enrollmentModel->isAlreadyEnrolled($target_user_id, $course_id)) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'You are already enrolled in this course.'
+                'message' => 'User is already enrolled in this course.'
             ]);
         }
 
-        // Insert new enrollment record
+        // Insert new enrollment record for the target user
         $enrollmentData = [
-            'user_id' => $user_id,
+            'user_id' => $target_user_id,
             'course_id' => $course_id
         ];
 
@@ -76,7 +88,7 @@ class Course extends BaseController
                 if ($course) {
                     $notificationModel = new NotificationModel();
                     $userModel = new \App\Models\UserModel();
-                    $student = $userModel->find($user_id);
+                    $student = $userModel->find($target_user_id);
                     
                     // Check if new columns exist
                     $db = \Config\Database::connect();
@@ -86,7 +98,7 @@ class Course extends BaseController
                     if ($hasNewFields) {
                         // Use new format with type and enrollment_id
                         $notificationModel->insert([
-                            'user_id' => $user_id,
+                            'user_id' => $target_user_id,
                             'message' => "Your enrollment request for course '{$course['title']}' has been submitted and is pending approval",
                             'type' => 'enrollment',
                             'enrollment_id' => $enrollmentId,
@@ -109,7 +121,7 @@ class Course extends BaseController
                     } else {
                         // Use legacy format without new columns
                         $notificationModel->insert([
-                            'user_id' => $user_id,
+                            'user_id' => $target_user_id,
                             'message' => "Your enrollment request for course '{$course['title']}' has been submitted and is pending approval",
                             'is_read' => 0,
                             'created_at' => date('Y-m-d H:i:s')
@@ -492,7 +504,19 @@ class Course extends BaseController
         }
 
         $data['course'] = $course;
-        $data['enrolledStudents'] = $enrollmentModel->getEnrolledStudents($id);
+        // If the current user is the teacher for this course, include both approved and teacher_unenrolled entries
+        if (session()->has('user_id') && session('role') === 'teacher' && $course['instructor_id'] == session('user_id')) {
+            $data['enrolledStudents'] = $enrollmentModel->select('enrollments.*, users.name as student_name, users.email as student_email')
+                                               ->join('users', 'users.id = enrollments.user_id')
+                                               ->where('enrollments.course_id', $id)
+                                               ->whereIn('enrollments.status', ['approved','teacher_unenrolled'])
+                                               ->orderBy('enrollments.enrollment_date', 'DESC')
+                                               ->findAll();
+        } else {
+            // Regular behavior: only approved enrollments
+            $data['enrolledStudents'] = $enrollmentModel->getEnrolledStudents($id);
+        }
+
         $data['pendingRequests'] = $enrollmentModel->select('enrollments.*, users.name as student_name, users.email as student_email')
                                                     ->join('users', 'users.id = enrollments.user_id')
                                                     ->where('enrollments.course_id', $id)
@@ -879,8 +903,15 @@ class Course extends BaseController
         }
 
         $data['course'] = $course;
-        $data['enrolledStudents'] = $enrollmentModel->getEnrolledStudents($courseId);
-        $data['pendingRequests'] = $enrollmentModel->getPendingRequestsForCourse($courseId);
+    $data['enrolledStudents'] = $enrollmentModel->getEnrolledStudents($courseId);
+    $data['pendingRequests'] = $enrollmentModel->getPendingRequestsForCourse($courseId);
+    // Teacher-initiated unenrollments that require admin review
+    $data['teacherUnenrolled'] = $enrollmentModel->select('enrollments.*, users.name as student_name, users.email as student_email')
+                            ->join('users', 'users.id = enrollments.user_id')
+                            ->where('enrollments.course_id', $courseId)
+                            ->where('enrollments.status', 'teacher_unenrolled')
+                            ->orderBy('enrollments.enrollment_date', 'DESC')
+                            ->findAll();
         $data['allStudents'] = $userModel->where('role', 'student')->findAll();
 
         return view('courses/manage_students', $data);
@@ -891,11 +922,11 @@ class Course extends BaseController
      */
     public function removeStudent($enrollmentId)
     {
-        // Check if user is admin
-        if (!session()->has('user_id') || session()->get('role') !== 'admin') {
+        // Check if user is admin or teacher who owns the course
+        if (!session()->has('user_id')) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Access denied. Admin only.'
+                'message' => 'Access denied. Login required.'
             ]);
         }
 
@@ -909,15 +940,67 @@ class Course extends BaseController
             ]);
         }
 
-        if ($enrollmentModel->delete($enrollmentId)) {
-            return $this->response->setJSON([
-                'success' => true,
-                'message' => 'Student removed from course successfully!'
-            ]);
+        // If requester is a teacher, ensure they own the course
+        if (session()->get('role') === 'teacher') {
+            // Teachers can mark a student as unenrolled but this requires admin review.
+            $courseModel = new CourseModel();
+            $course = $courseModel->find($enrollment['course_id']);
+            if (!$course || $course['instructor_id'] != session('user_id')) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Access denied. You do not own this course.'
+                ]);
+            }
+
+            // Update enrollment status to require admin review
+            if ($enrollmentModel->update($enrollmentId, ['status' => 'teacher_unenrolled'])) {
+                // Notify all admins about this teacher-initiated unenroll
+                try {
+                    $userModel = new \App\Models\UserModel();
+                    $notificationModel = new NotificationModel();
+                    $admins = $userModel->where('role', 'admin')->findAll();
+
+                    $student = $userModel->find($enrollment['user_id']);
+                    $teacherName = session('name') ?? 'A teacher';
+                    foreach ($admins as $admin) {
+                        $notificationModel->insert([
+                            'user_id' => $admin['id'],
+                            'message' => ($teacherName) . " has unenrolled " . ($student['name'] ?? 'a student') . " from '{$course['title']}' and awaits admin action.",
+                            'is_read' => 0,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    log_message('error', 'Admin notification on teacher unenroll failed: ' . $e->getMessage());
+                }
+
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Student marked for admin review. An admin will need to re-enroll or delete the record.'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Failed to mark student for admin review.'
+                ]);
+            }
+        } elseif (session()->get('role') === 'admin') {
+            // Admin may permanently remove the enrollment
+            if ($enrollmentModel->delete($enrollmentId)) {
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Student removed from course successfully!'
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Failed to remove student from course.'
+                ]);
+            }
         } else {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Failed to remove student from course.'
+                'message' => 'Access denied.'
             ]);
         }
     }
