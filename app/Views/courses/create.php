@@ -32,10 +32,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4 mb-3">
-                                <label for="course_code" class="form-label">Course Code</label>
-                                <input type="text" class="form-control" id="course_code" name="course_code" placeholder="e.g., ITE101">
-                            </div>
+                            <!-- Course code removed per admin request -->
                         </div>
 
                         <div class="mb-3">
@@ -47,12 +44,24 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label for="school_year" class="form-label">School Year</label>
-                                <input type="text" class="form-control" id="school_year" name="school_year" placeholder="e.g., 2024-2025">
+                                <?php
+                                    $currentYear = (int) date('Y');
+                                    $startYear = $currentYear - 3; // show a few recent years
+                                    $endYear = $currentYear + 1;   // include next year
+                                ?>
+                                <select class="form-select" id="school_year" name="school_year">
+                                    <option value="">Select School Year</option>
+                                    <?php for ($y = $endYear; $y >= $startYear; $y--): 
+                                        $label = ($y - 1) . '-' . $y;
+                                    ?>
+                                        <option value="<?= $label ?>"><?= $label ?></option>
+                                    <?php endfor; ?>
+                                </select>
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label for="semester" class="form-label">Semester</label>
                                 <select class="form-select" id="semester" name="semester">
                                     <option value="">Select Semester</option>
@@ -61,33 +70,11 @@
                                     <option value="Summer">Summer</option>
                                 </select>
                             </div>
-
-                            <div class="col-md-4 mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" id="status" name="status">
-                                    <option value="Active" selected>Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="schedule" class="form-label">Schedule</label>
-                            <input type="text" class="form-control" id="schedule" name="schedule" placeholder="e.g., MWF 10:00 AM - 11:30 AM">
-                            <small class="text-muted">Enter the class schedule (days and time)</small>
-                        </div>
+                        <!-- Schedule removed from create form per admin request -->
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="start_date" class="form-label">Start Date</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date">
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="end_date" class="form-label">End Date</label>
-                                <input type="date" class="form-control" id="end_date" name="end_date">
-                            </div>
-                        </div>
+                        <!-- Start Date, End Date and Status removed per admin UI requirement -->
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="<?= base_url('/course') ?>" class="btn btn-secondary me-md-2">Cancel</a>

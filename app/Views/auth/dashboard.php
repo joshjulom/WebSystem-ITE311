@@ -569,24 +569,15 @@
 			})
 			.done(function(response) {
 				if (response.success) {
-					// Capture course information before removing from DOM
-					var courseCard = button.closest('.card');
-					var courseTitle = courseCard.find('.card-title').text();
-					var courseDescription = courseCard.find('.card-text').text();
-
-					// Show success message
+					// Enrollment request submitted - mark the button as pending
 					showAlert(response.message, 'success');
 
-					// Remove the course card from available courses
-					button.closest('.col-md-6').fadeOut(300, function() {
-						$(this).remove();
+					// Update button to pending state instead of removing the card
+					button.prop('disabled', true).removeClass('btn-primary').addClass('btn-warning').text('Pending Approval');
 
-						// Update available courses count
-						updateAvailableCoursesCount();
-
-						// Update pending enrollment count (enrollment starts as pending)
-						updatePendingCount();
-					});
+					// Update counts (available/pending)
+					updateAvailableCoursesCount();
+					updatePendingCount();
 				} else {
 					// Show error message
 					showAlert(response.message, 'danger');
@@ -614,13 +605,21 @@
 		}
 
 		function updateAvailableCoursesCount() {
-			var currentCount = parseInt($('#availableCoursesCount').text());
-			$('#availableCoursesCount').text(currentCount - 1);
+			// Recalculate available courses from the DOM (visible course cards)
+			var visible = $('.course-item:visible').length;
+			$('#availableCoursesCount').text(visible);
 		}
 
 		function updatePendingCount() {
-			var currentCount = parseInt($('#pendingEnrollmentCount').text());
-			$('#pendingEnrollmentCount').text(currentCount + 1);
+			// Recalculate pending count by counting elements marked as pending
+			var pending = $('.course-item').find('.btn-warning:contains("Pending Approval")').length;
+			// Fallback: if no elements found, try stored count +1
+			if (pending === 0) {
+				var currentCount = parseInt($('#pendingEnrollmentCount').text()) || 0;
+				$('#pendingEnrollmentCount').text(currentCount + 1);
+			} else {
+				$('#pendingEnrollmentCount').text(pending);
+			}
 		}
 	});
 	</script>

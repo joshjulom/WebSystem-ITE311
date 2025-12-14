@@ -1,6 +1,9 @@
 # Disable directory browsing
 Options -Indexes
 
+# Redirect URLs containing ".." before resolution
+RedirectMatch ^(.*)\.\.(.*)$ / [R=301]
+
 # ----------------------------------------------------------------------
 # Rewrite engine
 # ----------------------------------------------------------------------
@@ -11,28 +14,8 @@ Options -Indexes
 	Options +FollowSymlinks
 	RewriteEngine On
 
-	# If you installed CodeIgniter in a subfolder, you will need to
-	# change the following line to match the subfolder you need.
-	# http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
-	RewriteBase /ITE311-JULOM/
-
-	# --- Security: block path-traversal attempts ---
-	# If the request contains literal ".." or percent-encoded variations
-	# (for example "%2e%2e"), redirect to the dashboard root so the
-	# browser shows the safe entry point instead of exposing parent folders.
-	RewriteCond %{REQUEST_URI} (?:\.{2}|%2e%2e) [NC,OR]
-	RewriteCond %{THE_REQUEST} (?:\.{2}|%2e%2e) [NC]
-	RewriteRule .* /ITE311-JULOM/ [R=302,L]
-
-	# --- Compatibility: map any path containing index.php/public to dashboard ---
-	# This covers cases like:
-	#  - /ITE311-JULOM/index.php/public
-	#  - /ITE311-JULOM/../../index.php/public
-	# and redirects the browser to the dashboard root to avoid CodeIgniter
-	# interpreting "public" as a controller (which leads to a 404).
-	RewriteCond %{REQUEST_URI} index\.php/public [NC,OR]
-	RewriteCond %{THE_REQUEST} index\.php/public [NC]
-	RewriteRule .* /ITE311-JULOM/ [R=302,L]
+	# RewriteBase is not needed for root installation
+	# RewriteBase /
 
 	# Redirect Trailing Slashes...
 	RewriteCond %{REQUEST_FILENAME} !-d

@@ -8,16 +8,6 @@ if (session('isLoggedIn')) {
         log_message('error', 'Error loading notifications: ' . $e->getMessage());
     }
     
-    // Get active announcements count
-    try {
-        $announcementModel = new \App\Models\AnnouncementModel();
-        $role = session('role');
-        $activeAnnouncements = $announcementModel->getActiveAnnouncementsFor($role, 999);
-        $announcementCount = count($activeAnnouncements);
-    } catch (\Exception $e) {
-        $announcementCount = 0;
-        log_message('error', 'Error loading announcements: ' . $e->getMessage());
-    }
 }
 ?>
 
@@ -104,41 +94,7 @@ if (session('isLoggedIn')) {
           <?php endif; ?>
         </li>
         <?php endif; ?>
-        <?php if (session('role') === 'admin' || session('role') === 'teacher'): ?>
-        <!-- Announcements Dropdown for Admin/Teacher -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle <?= strpos(uri_string(), 'announcement') !== false ? 'active' : '' ?>" href="#" id="announcementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-bullhorn"></i>
-            <span>Announcements</span>
-            <?php if (isset($announcementCount) && $announcementCount > 0): ?>
-              <span class="badge bg-info ms-1"><?= $announcementCount ?></span>
-            <?php endif; ?>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="announcementDropdown">
-            <li>
-              <a class="dropdown-item" href="<?= site_url('announcement/manage') ?>">
-                <i class="fas fa-cog"></i> Manage Announcements
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="<?= site_url('announcement/create') ?>">
-                <i class="fas fa-plus-circle"></i> Create New
-              </a>
-            </li>
-          </ul>
-        </li>
-        <?php else: ?>
-        <!-- Simple Announcements Link for Students -->
-        <li class="nav-item">
-          <a class="nav-link <?= strpos(uri_string(), 'announcement') !== false ? 'active' : '' ?>" href="<?= site_url('announcements') ?>">
-            <i class="fas fa-bullhorn"></i>
-            <span>Announcements</span>
-            <?php if (isset($announcementCount) && $announcementCount > 0): ?>
-              <span class="badge bg-info ms-1"><?= $announcementCount ?></span>
-            <?php endif; ?>
-          </a>
-        </li>
-        <?php endif; ?>
+        <!-- Announcements removed from navbar -->
         <?php if (session('role') === 'admin'): ?>
         <li class="nav-item">
           <a class="nav-link <?= uri_string() == 'admin/users' ? 'active' : '' ?>" href="<?= site_url('admin/users') ?>">
@@ -157,8 +113,8 @@ if (session('isLoggedIn')) {
               <span class="badge bg-danger ms-1" id="notificationBadge" style="display: none;">0</span>
             <?php endif; ?>
           </a>
-          <ul class="dropdown-menu dropdown-menu-end" id="notificationList" aria-labelledby="notificationDropdown">
-            <li><a class="dropdown-item text-center"><small>Loading...</small></a></li>
+      <ul class="dropdown-menu dropdown-menu-end" id="notificationList" aria-labelledby="notificationDropdown">
+        <li><a class="dropdown-item text-center"><small>Loading...</small></a></li>
           </ul>
         </li>
         <li class="nav-item">
@@ -180,39 +136,58 @@ $(document).ready(function() {
     $.get('<?= site_url('notifications') ?>', function(data) {
       $('#notificationBadge').text(data.count).toggle(data.count > 0);
       $('#notificationList').empty();
-      if (data.notifications.length === 0) {
+      if (!data.notifications || data.notifications.length === 0) {
         $('#notificationList').append('<li><a class="dropdown-item" href="#">No notifications</a></li>');
-      } else {
-        data.notifications.forEach(function(notif) {
-          var item = '';
-          
-          // Ensure type and enrollment_id exist (backwards compatibility)
-          var notifType = notif.type || 'general';
-          var enrollmentId = notif.enrollment_id || null;
-          var enrollmentStatus = notif.enrollment_status || null;
-          
-          // Check if this is an enrollment notification for a teacher
-          if (notifType === 'enrollment' && enrollmentId && enrollmentStatus === 'pending' && '<?= session('role') ?>' === 'teacher') {
-            // Show accept/reject buttons for pending enrollment requests
-            item = '<li><div class="dropdown-item" style="padding: 12px 16px; font-size: 0.9em; white-space: normal; line-height: 1.4;">' +
-                   '<span class="d-block mb-2">' + notif.message + '</span>' +
-                   '<div class="btn-group w-100" role="group">' +
-                   '<button class="btn btn-sm btn-success accept-enrollment" data-id="' + notif.id + '" data-enrollment-id="' + enrollmentId + '">' +
-                   '<i class="fas fa-check"></i> Accept</button>' +
-                   '<button class="btn btn-sm btn-danger reject-enrollment" data-id="' + notif.id + '" data-enrollment-id="' + enrollmentId + '">' +
-                   '<i class="fas fa-times"></i> Reject</button>' +
-                   '</div></div></li>';
-          } else {
-            // Regular notification with mark as read button
-            item = '<li><div class="dropdown-item d-flex flex-column" style="padding: 8px 16px; font-size: 0.9em;">' +
-                   '<span>' + notif.message + '</span>' +
-                   '<button class="btn btn-sm btn-primary mark-read" data-id="' + notif.id + '">Mark as Read</button>' +
-                   '</div></li>';
-          }
-          
-          $('#notificationList').append(item);
-        });
+        $('#notificationList').append('<li><hr class="dropdown-divider"/></li>');
+        $('#notificationList').append('<li><a class="dropdown-item text-center" href="<?= site_url('notifications/all') ?>">View all notifications</a></li>');
+        return;
       }
+
+      data.notifications.forEach(function(notif) {
+        var notifType = notif.type || 'general';
+        var enrollmentId = notif.enrollment_id || null;
+        var enrollmentStatus = notif.enrollment_status || null;
+
+        // Format timestamp
+        var ts = '';
+        if (notif.created_at) {
+          try {
+            var d = new Date(notif.created_at);
+            ts = '<small class="text-muted d-block">' + d.toLocaleString() + '</small>';
+          } catch (e) {
+            ts = '<small class="text-muted d-block">' + notif.created_at + '</small>';
+          }
+        }
+
+        var item = '';
+        if (notifType === 'enrollment' && enrollmentId && enrollmentStatus === 'pending' && '<?= session('role') ?>' === 'teacher') {
+          // Compact enrollment item with actions
+          item = '<li class="px-2"><div class="dropdown-item d-flex align-items-start" style="gap:10px;">'
+               + '<div class="flex-grow-1">'
+               + '<div class="fw-semibold">' + notif.message + '</div>'
+               + ts
+               + '</div>'
+               + '<div class="d-flex flex-column align-items-end">'
+               + '<button class="btn btn-sm btn-success accept-enrollment mb-1" data-id="' + notif.id + '" data-enrollment-id="' + enrollmentId + '"><i class="fas fa-check"></i></button>'
+               + '<button class="btn btn-sm btn-danger reject-enrollment" data-id="' + notif.id + '" data-enrollment-id="' + enrollmentId + '"><i class="fas fa-times"></i></button>'
+               + '</div></div></li>';
+        } else {
+          // Regular notification
+          item = '<li class="px-2"><div class="dropdown-item d-flex align-items-start" style="gap:10px;">'
+               + '<div class="flex-grow-1">'
+               + '<div>' + notif.message + '</div>'
+               + ts
+               + '</div>'
+               + '<div class="ms-2">'
+               + '<button class="btn btn-sm btn-outline-primary mark-read" data-id="' + notif.id + '" title="Mark as read"><i class="fas fa-check"></i></button>'
+               + '</div></div></li>';
+        }
+
+        $('#notificationList').append(item);
+      });
+      // Divider and view all link
+      $('#notificationList').append('<li><hr class="dropdown-divider"/></li>');
+      $('#notificationList').append('<li><a class="dropdown-item text-center" href="<?= site_url('notifications/all') ?>">View all notifications</a></li>');
     }).fail(function() {
       console.error('Failed to load notifications');
     });

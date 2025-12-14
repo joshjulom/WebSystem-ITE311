@@ -32,7 +32,10 @@ class Notifications extends BaseController
             
             // Get enrollment details for enrollment notifications (if columns exist)
             $enrollmentModel = new \App\Models\EnrollmentModel();
-            foreach ($notifications as &$notif) {
+            // Normalize each notification to an array to avoid undefined key notices
+            foreach ($notifications as $idx => $rawNotif) {
+                $notif = (array) $rawNotif;
+
                 // Set default type if not exists (backwards compatibility)
                 if (!isset($notif['type'])) {
                     $notif['type'] = 'general';
@@ -40,13 +43,16 @@ class Notifications extends BaseController
                 if (!isset($notif['enrollment_id'])) {
                     $notif['enrollment_id'] = null;
                 }
-                
+
                 if ($notif['type'] === 'enrollment' && !empty($notif['enrollment_id'])) {
                     $enrollment = $enrollmentModel->find($notif['enrollment_id']);
                     if ($enrollment) {
                         $notif['enrollment_status'] = $enrollment['status'] ?? 'pending';
                     }
                 }
+
+                // Replace original entry with normalized array
+                $notifications[$idx] = $notif;
             }
 
             return $this->respond([
@@ -77,5 +83,28 @@ class Notifications extends BaseController
         } else {
             return $this->respond(['error' => 'Failed to mark as read'], 400);
         }
+    }
+
+    /**
+     * Show a page with all notifications for the current user.
+     */
+    public function all()
+    {
+        if (!session('isLoggedIn')) {
+            return redirect()->to(site_url('login'));
+        }
+
+        $userId = session('user_id');
+        $notificationModel = new NotificationModel();
+
+        try {
+            // Get all notifications (limit to 200 for safety)
+            $notifications = $notificationModel->getAllNotificationsForUser($userId, 200);
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to load all notifications: ' . $e->getMessage());
+            $notifications = [];
+        }
+
+        return view('notifications/all', ['notifications' => $notifications]);
     }
 }

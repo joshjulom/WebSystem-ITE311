@@ -72,8 +72,11 @@ class EnrollmentModel extends Model
      */
     public function isAlreadyEnrolled($user_id, $course_id)
     {
+        // Only consider active or pending enrollments as 'already enrolled'.
+        // This allows users who were previously rejected or removed to re-enroll.
         return $this->where('user_id', $user_id)
                     ->where('course_id', $course_id)
+                    ->whereIn('status', ['approved', 'pending'])
                     ->countAllResults() > 0;
     }
 

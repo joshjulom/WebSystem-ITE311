@@ -54,10 +54,16 @@
                             <span class="input-group-text bg-dark text-light border-0">
                                 <i class="bi bi-envelope-fill"></i>
                             </span>
-                            <input type="email" class="form-control border-0 shadow-sm"
-                                   id="email" name="email" required
-                                   placeholder="you@example.com"
-                                   value="<?= esc(old('email')) ?>">
+                <!-- Use text + inputmode="email" to avoid browsers' strict ASCII-only
+                     email validation while still providing an email keyboard on mobile.
+                     Pattern matches server-side rule and permits Ñ/ñ in the local part. -->
+                <input type="text" inputmode="email"
+                    pattern="[A-Za-z0-9._%+Ññ\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}"
+                    title="Please enter a valid email. Allowed characters before the @: letters, numbers, . _ % + - and Ñ/ñ."
+                    class="form-control border-0 shadow-sm"
+                    id="email" name="email" required
+                    placeholder="you@example.com"
+                    value="<?= esc(old('email')) ?>">
                         </div>
                     </div>
 

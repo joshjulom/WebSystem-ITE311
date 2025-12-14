@@ -11,7 +11,7 @@
                     </h1>
                     <p class="text-muted mb-0">Browse and manage available courses</p>
                 </div>
-                <?php if (session()->has('user_id') && in_array(session()->get('role'), ['admin', 'teacher'])): ?>
+                <?php if (session()->has('user_id') && session()->get('role') === 'admin'): ?>
                     <a href="<?= base_url('/course/create') ?>" class="btn btn-success">
                         <i class="fas fa-plus"></i> Create Course
                     </a>
@@ -289,7 +289,8 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="editCourseCode" class="form-label">Course Code</label>
-                            <input type="text" class="form-control" id="editCourseCode" readonly>
+                            <input type="text" class="form-control" id="editCourseCode" placeholder="e.g., ITE101">
+                            <div class="form-text text-muted">Editable course code. Changes will be saved to the course record.</div>
                         </div>
                         <div class="col-md-6">
                             <label for="editCourseTitle" class="form-label">Course Title <span class="text-danger">*</span></label>
@@ -300,34 +301,7 @@
                         <label for="editCourseDescription" class="form-label">Description <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="editCourseDescription" rows="3" required></textarea>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <?php if (!empty($teachers ?? [])): ?>
-                                <label for="editTeacher" class="form-label">Teacher</label>
-                                <select class="form-select" id="editTeacher">
-                                    <option value="">Select Teacher</option>
-                                    <?php foreach ($teachers as $teacher): ?>
-                                        <option value="<?= esc($teacher['id']) ?>"><?= esc($teacher['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php endif; ?>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="editSchedule" class="form-label">Schedule</label>
-                            <select class="form-select" id="editSchedule">
-                                <option value="">Select Schedule</option>
-                                <option value="MWF 8:00-9:00 AM">MWF 8:00-9:00 AM</option>
-                                <option value="MWF 9:00-10:00 AM">MWF 9:00-10:00 AM</option>
-                                <option value="MWF 10:00-11:00 AM">MWF 10:00-11:00 AM</option>
-                                <option value="MWF 1:00-2:00 PM">MWF 1:00-2:00 PM</option>
-                                <option value="MWF 2:00-3:00 PM">MWF 2:00-3:00 PM</option>
-                                <option value="TTH 8:00-9:30 AM">TTH 8:00-9:30 AM</option>
-                                <option value="TTH 9:30-11:00 AM">TTH 9:30-11:00 AM</option>
-                                <option value="TTH 1:00-2:30 PM">TTH 1:00-2:30 PM</option>
-                                <option value="TTH 2:30-4:00 PM">TTH 2:30-4:00 PM</option>
-                            </select>
-                        </div>
-                    </div>
+                    <!-- Teacher and Schedule removed from edit modal per admin request; use Assign Teacher action for teacher changes -->
                 </form>
             </div>
             <div class="modal-footer border-secondary">
@@ -416,13 +390,14 @@ $(document).ready(function() {
             data: { course_id: courseId },
             dataType: 'json',
             success: function(response) {
-                if (response.success) {
-                    button.removeClass('btn-primary').addClass('btn-success').text('Enrolled').prop('disabled', true);
-                    alert(response.message);
-                } else {
-                    alert(response.message);
-                }
-            },
+                    if (response.success) {
+                        // Enrollment request submitted - show pending state until teacher approves
+                        button.removeClass('btn-primary').addClass('btn-warning').text('Pending Approval').prop('disabled', true);
+                        alert(response.message);
+                    } else {
+                        alert(response.message);
+                    }
+                },
             error: function() {
                 alert('Error enrolling in course.');
             }
@@ -479,8 +454,9 @@ $(document).ready(function() {
                     const course = response.courses.find(c => c.id == courseId);
                     if (course) {
                         $('#editCourseDescription').val(course.description || '');
-                        $('#editTeacher').val(course.instructor_id || '');
-                        $('#editSchedule').val(course.schedule || '');
+                        // Populate course code from server (prefer authoritative value)
+                        $('#editCourseCode').val(course.course_code || row.find('td:eq(0) .badge').text().trim());
+                        // Teacher and schedule are managed via separate actions (Assign Teacher / Schedule)
                     }
                 }
                 $('#editCourseModal').modal('show');
@@ -497,8 +473,7 @@ $(document).ready(function() {
         const formData = {
             title: $('#editCourseTitle').val().trim(),
             description: $('#editCourseDescription').val().trim(),
-            instructor_id: $('#editTeacher').val(),
-            schedule: $('#editSchedule').val()
+            course_code: $('#editCourseCode').val().trim()
         };
 
         if (!formData.title || !formData.description) {
@@ -519,9 +494,11 @@ $(document).ready(function() {
                 if (response.success) {
                     showAlert(response.message, 'success');
                     $('#editCourseModal').modal('hide');
-                    setTimeout(function() {
-                        location.reload();
-                    }, 1500);
+                    // Update badge in the table to show new course code
+                    const badgeCell = $('#courseList').find('tr[data-course-id="' + courseId + '"] td').first();
+                    const newCode = formData.course_code || ('#' + courseId);
+                    badgeCell.find('.badge').text(newCode);
+                    // Also update any other visible places if needed (e.g., cards)
                 } else {
                     showAlert(response.message || 'Failed to update course', 'danger');
                 }

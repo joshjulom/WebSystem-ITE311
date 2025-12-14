@@ -45,6 +45,26 @@ class NotificationModel extends Model
                     ->findAll();
     }
 
+    /**
+     * Get all notifications for a user (optionally paginated)
+     *
+     * @param int $userId
+     * @param int|null $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getAllNotificationsForUser($userId, $limit = null, $offset = 0)
+    {
+        $builder = $this->where('user_id', $userId)
+                        ->orderBy('created_at', 'DESC');
+
+        if ($limit !== null) {
+            return $builder->findAll($limit, $offset);
+        }
+
+        return $builder->findAll();
+    }
+
     public function markAsRead($notificationId)
     {
         return $this->update($notificationId, ['is_read' => 1]);

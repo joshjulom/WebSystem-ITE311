@@ -28,14 +28,16 @@ class UserModel extends Model
     // Validation - Only validate fields that exist in your database
     protected $validationRules = [
         'name' => 'required|min_length[3]|max_length[100]',
-        'email' => 'required|valid_email|is_unique[users.email]',
+        // Allow Ñ/ñ in the local-part; keep domain limited to ASCII (punycode for IDNs is recommended)
+        'email' => 'required|is_unique[users.email]|regex_match[/^[A-Za-z0-9._%+\-Ññ]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/]',
         'password' => 'required|min_length[6]'
         // Removed role validation since we're setting it programmatically
     ];
 
     protected $validationMessages = [
         'email' => [
-            'is_unique' => 'This email is already registered.'
+            'is_unique' => 'This email is already registered.',
+            'regex_match' => 'Please enter a valid email address. Allowed characters before the @: letters, numbers and . _ % + - and Ñ/ñ.'
         ]
     ];
 

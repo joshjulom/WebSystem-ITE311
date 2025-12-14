@@ -120,8 +120,19 @@ class Admin extends Controller
         }
 
         // Validate name format (server-side validation)
-        if (!preg_match("/^[A-Za-z\s\-']+$/", $name)) {
-            return $this->response->setJSON(['success' => false, 'message' => 'Name can only contain letters, spaces, hyphens, and apostrophes']);
+        if (!preg_match("/^[A-Za-zñÑ\s]+$/", $name)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Name can only contain letters, spaces, and ñ/Ñ']);
+        }
+
+        // Validate email format (local part only letters/numbers/a-z ñ)
+        $emailParts = explode('@', $email);
+        if (count($emailParts) === 2) {
+            $localPart = $emailParts[0];
+            if (!preg_match('/^[A-Za-zñÑ0-9]+$/', $localPart)) {
+                return $this->response->setJSON(['success' => false, 'message' => 'Email username can only contain letters, numbers, and ñ/Ñ (no special characters)']);
+            }
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Invalid email format']);
         }
 
         // Check for duplicate email
@@ -139,6 +150,8 @@ class Admin extends Controller
             'role' => $role
         ];
 
+        $this->userModel->skipValidation();
+//        $this->userModel->setValidationRules('email', 'required|is_unique[users.email]');
         if ($this->userModel->insert($data)) {
             return $this->response->setJSON(['success' => true, 'message' => 'User added successfully with default password: password123']);
         } else {
@@ -191,6 +204,24 @@ class Admin extends Controller
         $email = $this->request->getPost('email');
         $role = $this->request->getPost('role');
 
+        // Validate name if provided
+        if ($name && !preg_match("/^[A-Za-zñÑ\s]+$/", $name)) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Name can only contain letters, spaces, and ñ/Ñ']);
+        }
+
+        // Validate email local part if email is provided
+        if ($email) {
+            $emailParts = explode('@', $email);
+            if (count($emailParts) === 2) {
+                $localPart = $emailParts[0];
+                if (!preg_match('/^[A-Za-zñÑ0-9]+$/', $localPart)) {
+                    return $this->response->setJSON(['success' => false, 'message' => 'Email username can only contain letters, numbers, and ñ/Ñ (no special characters)']);
+                }
+            } else {
+                return $this->response->setJSON(['success' => false, 'message' => 'Invalid email format']);
+            }
+        }
+
         $data = [];
         if ($name) $data['name'] = $name;
         if ($email) $data['email'] = $email;
@@ -221,6 +252,31 @@ class Admin extends Controller
             return $this->response->setJSON(['success' => true, 'message' => 'Password changed successfully']);
         } else {
             return $this->response->setJSON(['success' => false, 'message' => 'Failed to change password']);
+        }
+    }
+
+    public function deleteUser($id)
+    {
+        $session = session();
+
+        if (!$session->get('isLoggedIn') || $session->get('role') !== 'admin') {
+            return $this->response->setJSON(['success' => false, 'message' => 'Unauthorized']);
+        }
+
+        // Prevent deleting the main admin
+        if ($id == 1) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Cannot delete main admin']);
+        }
+
+        $user = $this->userModel->find($id);
+        if (!$user) {
+            return $this->response->setJSON(['success' => false, 'message' => 'User not found']);
+        }
+
+        if ($this->userModel->delete($id)) {
+            return $this->response->setJSON(['success' => true, 'message' => 'User deleted successfully']);
+        } else {
+            return $this->response->setJSON(['success' => false, 'message' => 'Failed to delete user']);
         }
     }
 
@@ -324,6 +380,11 @@ class Admin extends Controller
 
         if ($this->request->getPost('semester')) {
             $data['semester'] = $this->request->getPost('semester');
+        }
+
+        // Allow updating course_code from admin edit modal
+        if ($this->request->getPost('course_code')) {
+            $data['course_code'] = $this->request->getPost('course_code');
         }
 
         if ($this->request->getPost('start_date')) {

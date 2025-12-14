@@ -20,13 +20,31 @@ class Auth extends Controller
 			log_message('info', 'POST data: ' . print_r($this->request->getPost(), true));
 			
 			$rules = [
-				'name' => 'required|min_length[3]|max_length[100]',
-				'email' => 'required|valid_email|is_unique[users.email]',
+				'name' => 'required|min_length[3]|max_length[100]|regex_match[/^[A-Za-zÑñ ]+$/]',
+				// Note: we remove CodeIgniter's `valid_email` rule because many browsers/PHP
+				// validators do not accept non-ASCII local-parts (like 'ñ'). We rely on the
+				// explicit regex below (which allows Ñ/ñ) and `is_unique` to validate emails.
+				'email' => 'required|is_unique[users.email]|regex_match[/^[A-Za-z0-9._%+\-Ññ]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/]',
 				'password' => 'required|min_length[6]',
 				'password_confirm' => 'matches[password]'
 			];
-			
-			if ($this->validate($rules)) {
+
+			$messages = [
+				'name' => [
+					'required' => 'Name is required.',
+					'min_length' => 'Name must be at least 3 characters.',
+					'max_length' => 'Name cannot exceed 100 characters.',
+					'regex_match' => 'Name can only contain letters, spaces, and the Ñ/ñ character. No other special characters are allowed.'
+				],
+				'email' => [
+					'required' => 'Email is required.',
+					'valid_email' => 'Please enter a valid email address.',
+					'is_unique' => 'This email address is already registered.',
+					'regex_match' => 'Email contains invalid characters. Only letters, numbers and . _ % + - are allowed before the @, and a normal domain after it.'
+				]
+			];
+
+			if ($this->validate($rules, $messages)) {
 				log_message('info', 'Validation passed');
 				
 				try {

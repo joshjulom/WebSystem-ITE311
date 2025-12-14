@@ -103,6 +103,8 @@ class Course extends BaseController
                                 'is_read' => 0,
                                 'created_at' => date('Y-m-d H:i:s')
                             ]);
+                        } else {
+                            // No instructor assigned; instructor notification skipped. Admins will be notified below.
                         }
                     } else {
                         // Use legacy format without new columns
@@ -120,9 +122,44 @@ class Course extends BaseController
                                 'is_read' => 0,
                                 'created_at' => date('Y-m-d H:i:s')
                             ]);
+                        } else {
+                            // No instructor assigned; instructor notification skipped. Admins will be notified below (legacy format).
                         }
                     }
                 }
+
+                    // Notify all admins about this enrollment request (exclude instructor if present to avoid duplicate)
+                    try {
+                        $admins = $userModel->where('role', 'admin')->findAll();
+                        foreach ($admins as $admin) {
+                            // Skip notifying the instructor here since they were already notified above (if present)
+                            if (!empty($course['instructor_id']) && $admin['id'] == $course['instructor_id']) {
+                                continue;
+                            }
+
+                            if ($hasNewFields) {
+                                $notificationModel->insert([
+                                    'user_id' => $admin['id'],
+                                    'message' => ($student['name'] ?? 'A student') . " has requested to enroll in '{$course['title']}'",
+                                    'type' => 'enrollment',
+                                    'enrollment_id' => $enrollmentId,
+                                    'is_read' => 0,
+                                    'created_at' => date('Y-m-d H:i:s')
+                                ]);
+                            } else {
+                                $notificationModel->insert([
+                                    'user_id' => $admin['id'],
+                                    'message' => ($student['name'] ?? 'A student') . " has requested to enroll in '{$course['title']}'",
+                                    'is_read' => 0,
+                                    'created_at' => date('Y-m-d H:i:s')
+                                ]);
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // Don't let admin notification failures break the enrollment flow
+                        log_message('error', 'Admin notification failed: ' . $e->getMessage());
+                    }
+
             } catch (\Exception $e) {
                 // Log the error but don't fail the enrollment
                 log_message('error', 'Notification creation failed: ' . $e->getMessage());
@@ -190,6 +227,42 @@ class Course extends BaseController
                 'is_read' => 0,
                 'created_at' => date('Y-m-d H:i:s')
             ]);
+
+            // Also notify admins that this enrollment was approved
+            try {
+                $db = \Config\Database::connect();
+                $fields = $db->getFieldNames('notifications');
+                $hasNewFields = in_array('type', $fields) && in_array('enrollment_id', $fields);
+
+                $userModel = new \App\Models\UserModel();
+                $admins = $userModel->where('role', 'admin')->findAll();
+                foreach ($admins as $admin) {
+                    // Don't notify the approving teacher if they are also an admin (avoid duplicate for same user)
+                    if ($admin['id'] == session('user_id')) {
+                        continue;
+                    }
+
+                    if ($hasNewFields) {
+                        $notificationModel->insert([
+                            'user_id' => $admin['id'],
+                            'message' => 'Enrollment for "' . ($course['title'] ?? 'the course') . '" was approved by ' . (session('name') ?? 'a teacher'),
+                            'type' => 'enrollment',
+                            'enrollment_id' => $enrollment_id,
+                            'is_read' => 0,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                    } else {
+                        $notificationModel->insert([
+                            'user_id' => $admin['id'],
+                            'message' => 'Enrollment for "' . ($course['title'] ?? 'the course') . '" was approved by ' . (session('name') ?? 'a teacher'),
+                            'is_read' => 0,
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                log_message('error', 'Admin notification on approval failed: ' . $e->getMessage());
+            }
 
             return $this->response->setJSON([
                 'success' => true,
@@ -497,9 +570,9 @@ class Course extends BaseController
      */
     public function create()
     {
-        // Check if user is admin or teacher
-        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
-            return redirect()->to('/login')->with('error', 'Access denied');
+        // Only admins can create courses
+        if (!session()->has('user_id') || session()->get('role') !== 'admin') {
+            return redirect()->to('/courses')->with('error', 'Access denied');
         }
 
         return view('courses/create');
@@ -510,8 +583,8 @@ class Course extends BaseController
      */
     public function store()
     {
-        // Check if user is admin or teacher
-        if (!session()->has('user_id') || !in_array(session()->get('role'), ['admin', 'teacher'])) {
+        // Only admins can store/create courses
+        if (!session()->has('user_id') || session()->get('role') !== 'admin') {
             return $this->response->setJSON(['success' => false, 'message' => 'Access denied']);
         }
 
@@ -529,7 +602,6 @@ class Course extends BaseController
         $data = [
             'title' => $this->request->getPost('title'),
             'description' => $this->request->getPost('description'),
-            'course_code' => $this->request->getPost('course_code'),
             'school_year' => $this->request->getPost('school_year'),
             'semester' => $this->request->getPost('semester'),
             'schedule' => $this->request->getPost('schedule'),
@@ -595,7 +667,6 @@ class Course extends BaseController
         $data = [
             'title' => $this->request->getPost('title'),
             'description' => $this->request->getPost('description'),
-            'course_code' => $this->request->getPost('course_code'),
             'school_year' => $this->request->getPost('school_year'),
             'semester' => $this->request->getPost('semester'),
             'schedule' => $this->request->getPost('schedule'),

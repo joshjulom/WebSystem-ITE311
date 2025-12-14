@@ -67,9 +67,12 @@
                                                 <button class="btn btn-warning btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editUserModal" data-user-id="<?= $user['id'] ?>" data-name="<?= esc($user['name']) ?>" data-email="<?= esc($user['email']) ?>" data-role="<?= $user['role'] ?>">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </button>
-                                                <button class="btn btn-<?= $user['status'] == 'active' ? 'danger' : 'success' ?> btn-sm toggle-status-btn" data-user-id="<?= $user['id'] ?>" data-name="<?= esc($user['name']) ?>" data-current-status="<?= $user['status'] ?>">
+                                            <button class="btn btn-<?= $user['status'] == 'active' ? 'danger' : 'success' ?> btn-sm toggle-status-btn" data-user-id="<?= $user['id'] ?>" data-name="<?= esc($user['name']) ?>" data-current-status="<?= $user['status'] ?>">
                                                     <i class="fas fa-<?= $user['status'] == 'active' ? 'ban' : 'check' ?>"></i>
                                                     <?= $user['status'] == 'active' ? 'Deactivate' : 'Activate' ?>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm delete-btn" data-user-id="<?= $user['id'] ?>" data-name="<?= esc($user['name']) ?>">
+                                                    <i class="fas fa-trash"></i> Delete
                                                 </button>
                                             <?php endif; ?>
                                             <button class="btn btn-info btn-sm change-password-btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal" data-user-id="<?= $user['id'] ?>" data-name="<?= esc($user['name']) ?>">
@@ -99,12 +102,13 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required pattern="[A-Za-z\s\-']+" title="Name can only contain letters, spaces, hyphens, and apostrophes">
-                        <div class="form-text">Name can only contain letters, spaces, hyphens, and apostrophes.</div>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                        <div class="form-text">Name can only contain letters, spaces, and ñ/Ñ. Special characters are not allowed.</div>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email/Username</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="text" class="form-control" id="email" name="email" required pattern="[A-Za-zñÑ0-9@.\-]+">
+                        <div class="form-text">Email username must contain only letters, numbers, and ñ/Ñ.</div>
                     </div>
                     <div class="mb-3">
                         <label for="defaultPassword" class="form-label">Default Password</label>
@@ -146,7 +150,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="editEmail" class="form-label">Email/Username</label>
-                        <input type="email" class="form-control" id="editEmail" name="email" required>
+                        <input type="text" class="form-control" id="editEmail" name="email" required>
                     </div>
                     <div class="mb-3">
                         <label for="editRole" class="form-label">Role</label>
@@ -223,15 +227,7 @@ $(document).ready(function() {
     $('#addUserForm').submit(function(e) {
         const nameField = $('#name');
         const nameValue = nameField.val();
-        const namePattern = /^[A-Za-z\s\-']+$/;
-
-        // Check for special characters in name
-        if (!namePattern.test(nameValue)) {
-            e.preventDefault();
-            showAlert('danger', 'Name can only contain letters, spaces, hyphens, and apostrophes. Special characters are not allowed.');
-            nameField.focus();
-            return false;
-        }
+        // Client-side validation removed as server handles it
 
         e.preventDefault();
         const formData = $(this).serialize();
@@ -324,6 +320,25 @@ $(document).ready(function() {
                 }
             }, 'json').fail(function() {
                 showAlert('danger', `Failed to ${action} user`);
+            });
+        }
+    });
+
+    // Delete user button
+    $('.delete-btn').click(function() {
+        const userId = $(this).data('user-id');
+        const name = $(this).data('name');
+
+        if (confirm(`Are you sure you want to permanently delete user ${name}? This action cannot be undone.`)) {
+            $.post('<?= base_url("/admin/deleteUser/") ?>' + userId, {}, function(response) {
+                if (response.success) {
+                    showAlert('success', response.message);
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showAlert('danger', response.message);
+                }
+            }, 'json').fail(function() {
+                showAlert('danger', 'Failed to delete user');
             });
         }
     });
